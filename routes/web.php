@@ -133,20 +133,38 @@ Route::middleware(['auth', 'level'])->prefix('admin')->group(function () {
     Route::prefix('products')->group(function () {
         Route::get('/search', [ProductController::class, 'search'])
             ->name('products.search');
+
+
+//        Route::get('/fetch-quantity', [ProductController::class, 'fetchQuantity'])
+//            ->name('products.fetch-quantity');
+
+
+        Route::post('/emptyTempFolder', [ProductController::class, 'emptyTempFolder'])
+            ->name('products.emptyTempFolder');
+        Route::post('/update/{id}', [ProductController::class, 'update'])
+            ->name('products.update');
+        Route::get('/edit{id}', [ProductController::class, 'edit'])
+            ->name('products.edit');
+        Route::get('/productDetails/{product}', [ProductController::class, 'productsDetails'])
+            ->name('products.productDetails');
         Route::put('/restore', [ProductController::class, 'restore'])
             ->name('products.restore');
         Route::get('/delete{id}', [ProductController::class, 'delete'])
             ->name('products.delete');
-        Route::put('/update{id}', [ProductController::class, 'update'])
-            ->name('products.update');
-        Route::get('/fetch-quantity', [ProductController::class, 'fetchQuantity'])
-            ->name('products.fetch-quantity');
-        Route::get('/edit{id}', [ProductController::class, 'edit'])
-            ->name('products.edit');
         Route::post('/store', [ProductController::class, 'store'])
             ->name('products.store');
-        Route::get('/create', [ProductController::class, 'create'])
-            ->name('products.create');
+//        Route::get('/create', [ProductController::class, 'create'])
+//            ->name('products.create');
+
+
+        Route::post('/products/store', [ProductController::class, 'store'])->name('products.store');
+        Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');
+        Route::post('/uploadImgDZ', [ProductController::class, 'uploadImgDZ'])->name('uploadImgDZ');
+        Route::post('/deleteImgDZ', [ProductController::class, 'deleteImgDZ'])->name('deleteImgDZ');
+        Route::post('/updateText', [ProductController::class, 'updateText'])
+            ->name('products.updateText');
+        Route::get('/getText', [ProductController::class, 'getText'])
+            ->name('products.getText');
         Route::get('/', [ProductController::class, 'index'])
             ->name('products');
     });

@@ -9,6 +9,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+
     @yield('title')
 
     <!-- Font Awesome Icons -->
@@ -62,19 +63,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <!-- /.control-sidebar -->
 
     <!-- Main Footer -->
-    @include('admin.partials.footer')
-    @if (session('error'))
-        <script>
-            // Show alert with the error message
-            alert("{{ session('error') }}");
-        </script>
-    @endif
-    @if (session('success'))
-        <script>
-            // Show alert with the error message
-            alert("{{ session('success') }}");
-        </script>
-    @endif
+{{--    @include('admin.partials.footer')--}}
+
 </div>
 <!-- ./wrapper -->
 
@@ -90,5 +80,17 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <script src="{{asset('admins/js/adminlte.min.js')}}"></script>
 <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.14.0/build/alertify.min.js"></script>
 @yield('this-js')
+@if (session('error'))
+    <script>
+        // Show alert with the error message
+        alertify.alert('Error', "{{ session('error') }}");
+    </script>
+@endif
+@if (session('success'))
+    <script>
+        // Show alert with the error message
+        alertify.alert('Success',"{{ session('success') }}");
+    </script>
+@endif
 </body>
 </html>

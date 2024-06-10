@@ -12,53 +12,54 @@ use mysql_xdevapi\Exception;
 class OrderController extends Controller
 {
     public function index(Request $request) {
-        $sortBy = $request->get('sort_by', 'created_at'); // Default column to sort by
-        $sortDirection = $request->get('sort_direction', 'desc'); // Default sort direction
-        $showDeleted = $request->get('show_deleted', 'no'); // Default to not showing deleted
-        $searchTerm = $request->get('search_term', '');
+        try {
+            $sortBy = $request->get('sort_by', 'created_at'); // Default column to sort by
+            $sortDirection = $request->get('sort_direction', 'desc'); // Default sort direction
+            $showDeleted = $request->get('show_deleted', 'no'); // Default to not showing deleted
+            $searchTerm = $request->get('search_term', '');
 
-        $order_status = $request->get('order_status', null);
-        $payment_status = $request->get('payment_status', null);
+            $order_status = $request->get('order_status', null);
+            $payment_status = $request->get('payment_status', null);
 
 
-        // Validate sort direction
-        if (!in_array($sortDirection, ['asc', 'desc'])) {
-            $sortDirection = 'desc';
-        }
-        $query = Order::query();
-        // Fetch orders with or without trashed ones
-        if ($showDeleted === 'yes') {
-            $query = $query->withTrashed();
-        }
-        if ($searchTerm) {
-            $query->where(function ($query) use ($searchTerm) {
-                $query->where('id', 'like', "%$searchTerm%")
-                    ->orWhere('user_id', 'like', "%$searchTerm%")
-                    ->orWhere('last_name', 'like', "%$searchTerm%")
-                    ->orWhere('company_name', 'like', "%$searchTerm%")
-                    ->orWhere('country', 'like', "%$searchTerm%")
-                    ->orWhere('street_address', 'like', "%$searchTerm%")
-                    ->orWhere('postcode_zip', 'like', "%$searchTerm%")
-                    ->orWhere('town_city', 'like', "%$searchTerm%")
-                    ->orWhere('email', 'like', "%$searchTerm%")
-                    ->orWhere('phone', 'like', "%$searchTerm%")
-                    ->orWhere('payment_type', 'like', "%$searchTerm%")
-                    ->orWhere('shipping_method', 'like', "%$searchTerm%")
-                    ->orWhere('status', 'like', "%$searchTerm%")
-                    ->orWhere('created_at', 'like', "%$searchTerm%")
-                    ->orWhere('note', 'like', "%$searchTerm%")
-                    ->orWhere('first_name', 'like', "%$searchTerm%");
-            })
-                ->orWhereHas('orderDetails', function ($query) use ($searchTerm) {
+            // Validate sort direction
+            if (!in_array($sortDirection, ['asc', 'desc'])) {
+                $sortDirection = 'desc';
+            }
+            $query = Order::query();
+            // Fetch orders with or without trashed ones
+            if ($showDeleted === 'yes') {
+                $query = $query->withTrashed();
+            }
+            if ($searchTerm) {
                 $query->where(function ($query) use ($searchTerm) {
-                    $query->where('product_id', 'like', "%$searchTerm%")
-                        ->orWhere('qty', 'like', "%$searchTerm%") // Added column
-                        ->orWhere('total', 'like', "%$searchTerm%") // Added column
-                        ->orWhere('size', 'like', "%$searchTerm%") // Added column
-                        ->orWhere('color', 'like', "%$searchTerm%") // Added column
-                        ->orWhere('coupon', 'like', "%$searchTerm%"); // Added column
-                });
-            })
+                    $query->where('id', 'like', "%$searchTerm%")
+                        ->orWhere('user_id', 'like', "%$searchTerm%")
+                        ->orWhere('last_name', 'like', "%$searchTerm%")
+                        ->orWhere('company_name', 'like', "%$searchTerm%")
+                        ->orWhere('country', 'like', "%$searchTerm%")
+                        ->orWhere('street_address', 'like', "%$searchTerm%")
+                        ->orWhere('postcode_zip', 'like', "%$searchTerm%")
+                        ->orWhere('town_city', 'like', "%$searchTerm%")
+                        ->orWhere('email', 'like', "%$searchTerm%")
+                        ->orWhere('phone', 'like', "%$searchTerm%")
+                        ->orWhere('payment_type', 'like', "%$searchTerm%")
+                        ->orWhere('shipping_method', 'like', "%$searchTerm%")
+                        ->orWhere('status', 'like', "%$searchTerm%")
+                        ->orWhere('created_at', 'like', "%$searchTerm%")
+                        ->orWhere('note', 'like', "%$searchTerm%")
+                        ->orWhere('first_name', 'like', "%$searchTerm%");
+                })
+                    ->orWhereHas('orderDetails', function ($query) use ($searchTerm) {
+                        $query->where(function ($query) use ($searchTerm) {
+                            $query->where('product_id', 'like', "%$searchTerm%")
+                                ->orWhere('qty', 'like', "%$searchTerm%") // Added column
+                                ->orWhere('total', 'like', "%$searchTerm%") // Added column
+                                ->orWhere('size', 'like', "%$searchTerm%") // Added column
+                                ->orWhere('color', 'like', "%$searchTerm%") // Added column
+                                ->orWhere('coupon', 'like', "%$searchTerm%"); // Added column
+                        });
+                    })
 //                ->orWhereHas('voucher', function ($query) use ($searchTerm) {
 //                $query->where(function ($query) use ($searchTerm) {
 //                    $query->where('code', 'like', "%$searchTerm%");
@@ -66,28 +67,31 @@ class OrderController extends Controller
 ////                        ->orWhere('phone_number', 'like', "%$searchTerm%"); // Added column
 //                });
 //            })
-                ->orWhereHas('user', function ($query) use ($searchTerm) {
-                $query->where(function ($query) use ($searchTerm) {
-                    $query->where('name', 'like', "%$searchTerm%");
+                    ->orWhereHas('user', function ($query) use ($searchTerm) {
+                        $query->where(function ($query) use ($searchTerm) {
+                            $query->where('name', 'like', "%$searchTerm%");
 //                        ->orWhere('id', 'like', "%$searchTerm%") // Added column
 //                        ->orWhere('phone_number', 'like', "%$searchTerm%"); // Added column
-                });
-            });
-        }
+                        });
+                    });
+            }
 
-        if ($order_status !== null) {
-            $query = $query->where('status', $order_status);
-        }
+            if ($order_status !== null) {
+                $query = $query->where('status', $order_status);
+            }
 
 //        if ($payment_status !== null) {
 //            $query = $query->where('payment_status', $payment_status);
 //        }
 
-        $query->orderBy($sortBy, $sortDirection);
+            $query->orderBy($sortBy, $sortDirection);
 
-        $orders = $query->paginate(4);
+            $orders = $query->paginate(4);
 
-        return view('admin.order.index', compact('orders', 'sortBy', 'sortDirection', 'showDeleted', 'order_status', 'payment_status','searchTerm'));
+            return view('admin.order.index', compact('orders', 'sortBy', 'sortDirection', 'showDeleted', 'order_status', 'payment_status', 'searchTerm'));
+        }catch(\Exception $exception) {
+            return redirect()->route('home')->with('error', 'Something went wrong!');
+        }
     }
 
     public function delete(Request $request, $order_id)
