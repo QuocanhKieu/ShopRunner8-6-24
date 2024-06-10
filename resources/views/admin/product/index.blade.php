@@ -450,7 +450,7 @@
                             <!-- Weight -->
                             <div class="form-group">
                                 <label for="edit_weight">Weight</label>
-                                <input type="number" class="form-control" id="edit_weight" name="weight">
+                                <input type="number" class="form-control" id="edit_weight" name="weight" step="0.1">
                             </div>
 
                             <!-- Featured Select -->

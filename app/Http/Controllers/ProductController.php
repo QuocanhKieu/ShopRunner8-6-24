@@ -514,7 +514,7 @@ class ProductController extends Controller
 
         // Get the query parameters from the request
         $queryParams = $request->query();
-
+        session()->flash('success', 'Product deleted successfully');
         // Redirect to the orders route with the same query parameters
         return Redirect::route('products', $queryParams);
     }
