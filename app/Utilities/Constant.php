@@ -6,36 +6,42 @@ class Constant
 {
     //Order
     const ORDER_STATUS_RECEIVEORDERS = 1;
-    const ORDER_STATUS_UNCONFIRMED = 2;
-    const ORDER_STATUS_CONFIRMED = 3;
-    const ORDER_STATUS_PAID = 4;
-    const ORDER_STATUS_PROCESSING = 5;
-    const ORDER_STATUS_SHIPPING = 6;
-    const ORDER_STATUS_FINISH = 7;
-    const ORDER_STATUS_CANCEL = 8;
+
+    const ORDER_STATUS_CONFIRMED = 2;
+
+    const ORDER_STATUS_SHIPPING = 3;
+    const ORDER_STATUS_FINISH = 4;
+    const ORDER_STATUS_CANCEL = 5;
     public static $ORDER_STATUS = [
-       self::ORDER_STATUS_RECEIVEORDERS => 'Receive Orders',
-        self::ORDER_STATUS_UNCONFIRMED => 'Unconfirmed',
+       self::ORDER_STATUS_RECEIVEORDERS => 'Orders received',
+
         self::ORDER_STATUS_CONFIRMED => 'Confirmed',
-        self::ORDER_STATUS_PAID => 'Paid',
-        self::ORDER_STATUS_PROCESSING => 'Processing',
+
         self::ORDER_STATUS_SHIPPING => 'Shipping',
-        self::ORDER_STATUS_FINISH => 'Finish',
-        self::ORDER_STATUS_CANCEL => 'Cancel',
+        self::ORDER_STATUS_FINISH => 'Finished',
+        self::ORDER_STATUS_CANCEL => 'Canceled',
     ];
 
 
     const STATUSCOLORS = [
-        self::ORDER_STATUS_RECEIVEORDERS => '#6c757d',// Grey
-        self::ORDER_STATUS_UNCONFIRMED => '#000',// black
+        self::ORDER_STATUS_RECEIVEORDERS => '#000',// Grey
+//        self::ORDER_STATUS_UNCONFIRMED => '#000',// black
         self::ORDER_STATUS_CONFIRMED => '#007bff',// Blue
-        self::ORDER_STATUS_PAID => '#ffc107',// Yellow
-        self::ORDER_STATUS_PROCESSING => '#6f42c1',// Purple
+//        self::ORDER_STATUS_PAID => '#ffc107',// Yellow
+//        self::ORDER_STATUS_PROCESSING => '#6f42c1',// Purple
         self::ORDER_STATUS_SHIPPING => '#28a745',// Green
         self::ORDER_STATUS_FINISH => '#fd7e14',// Orange
         self::ORDER_STATUS_CANCEL => '#dc3545',// Red
     ];
 
+
+    const PAYMENT_STATUS_UNPAID = 1;
+    const PAYMENT_STATUS_PAID = 2;
+
+    public static $PAYMENT_STATUS = [
+        self::PAYMENT_STATUS_UNPAID => 'Chưa thanh toán',
+        self::PAYMENT_STATUS_PAID => 'Đã thanh toán',
+    ];
 
     //user
     const user_level_superAdmin = 0;

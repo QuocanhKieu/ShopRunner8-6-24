@@ -62,7 +62,7 @@
             <input type="hidden" name="sort_by" value="{{ request('sort_by', $sortBy) }}">
             <input type="hidden" name="sort_direction" value="{{ request('sort_direction', $sortDirection) }}">
             <input type="hidden" name="show_deleted" value="{{ request('show_deleted', $showDeleted) }}">
-            <input type="hidden" name="page" value="{{ $products->currentPage() }}">
+{{--            <input type="hidden" name="page" value="{{ $products->currentPage() }}">--}}
             <div class="input-group input-group-sm">
                 <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search"
                        value="{{ request('search_term', $searchTerm) }}" name="search_term">
@@ -73,6 +73,61 @@
                 </div>
             </div>
         </form>
+
+
+
+
+        <form method="GET" action="{{ route('orders') }}" class="p-3">
+            <input type="hidden" name="sort_by" value="{{ request('sort_by', $sortBy) }}">
+            <input type="hidden" name="sort_direction" value="{{ request('sort_direction', $sortDirection) }}">
+            {{--                <input type="hidden" name="page" value="{{ $orders->currentPage() }}">--}}
+
+            <div class="form-row">
+                <div class="form-group col-md-2">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="show_deleted" id="show_deleted" value="yes" {{ $showDeleted === 'yes' ? 'checked' : '' }}>
+                        <label class="form-check-label" for="show_deleted">
+                            Display hidden orders
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group col-md-2">
+                    <label for="order_status">Order status</label>
+                    <select class="form-control" name="order_status" id="order_status">
+                        <option value="">Tất cả</option>
+                        @foreach($ORDERS_STATUSES as $key => $status)
+                            <option value="{{$key}}" {{ $key == $order_status ? 'selected' : '' }}>
+                                {{$status}}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="form-group col-md-2">
+                    <label for="min_price">Min Price</label>
+                    <input type="number" class="form-control" id="min_price" name="min_price" value="{{ request('min_price') }}" placeholder="0" min="0">
+                </div>
+                <div class="form-group col-md-2">
+                    <label for="max_price">Max Price</label>
+                    <input type="number" class="form-control" id="max_price" name="max_price" value="{{ request('max_price') }}" placeholder="">
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="search_term">Search</label>
+                    <div class="input-group input-group-sm">
+                        <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search" value="{{ request('search_term', $searchTerm) }}" name="search_term">
+                        <div class="input-group-append">
+                            <button class="btn btn-navbar" type="submit">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+
+
+
+
         <div class="content">
             <form method="GET" action="{{ route('products') }}" style="padding-left: 13px;">
                 <input type="hidden" name="sort_by" value="{{ request('sort_by', $sortBy) }}">

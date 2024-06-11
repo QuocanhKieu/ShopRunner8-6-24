@@ -212,6 +212,8 @@ Route::middleware(['auth', 'level'])->prefix('admin')->group(function () {
             ->name('orders.create');
         Route::get('/', [OrderController::class, 'index'])
             ->name('orders');
+        Route::post('/change-status', [OrderController::class, 'changeStatus'])->name('changeStatus');
+
     });
 
     Route::prefix('reviews')->group(function () {

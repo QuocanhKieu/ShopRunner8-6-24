@@ -1,4 +1,3 @@
-@php use App\Utilities\Constant as Constant @endphp
 @extends('admin.layouts.admin')
 @section('title')
     <title>Danh Sách Đơn Hàng</title>
@@ -83,18 +82,8 @@
             color: #22d271;
         }
         #order_status, #payment_status {
-            /*min-width: 300px;*/
-            /*width: 30%;*/
-        }
-        input[type='search'] {
-            height :auto !important;
-            font-size: 1.175rem !important;
-        }
-        .paymentSta {
-            color : white;
-            padding: 2px;
-            white-space: nowrap;
-            border-radius: 3px;
+            min-width: 300px;
+            width: 30%;
         }
         /*.delete-order {*/
         /*    padding: 5px;*/
@@ -105,59 +94,66 @@
 
     @php
         $ORDERS_STATUSES = App\Utilities\Constant::$ORDER_STATUS;
-        $PAYMENT_STATUSES = Constant::$PAYMENT_STATUS;
+//        $PAYMENT_STATUSES = App\Constants\OrderConstants::PAYMENTSTATUSES;
         $STATUS_COLORS = App\Utilities\Constant::STATUSCOLORS;
     @endphp
         <div class="content-wrapper">
         @include('admin.partials.content-header',['name' => '', 'key' => 'Danh Sánh Đơn Hàng','url' => ''])
-        <div class="content">
-            <form method="GET" action="{{ route('orders') }}" class="p-3">
+            <form class="form-inline ml-3" method="GET" action="{{ route('orders') }}">
                 <input type="hidden" name="sort_by" value="{{ request('sort_by', $sortBy) }}">
                 <input type="hidden" name="sort_direction" value="{{ request('sort_direction', $sortDirection) }}">
-{{--                <input type="hidden" name="page" value="{{ $orders->currentPage() }}">--}}
-
-                <div class="form-row">
-                    <div class="form-group col-md-2">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="show_deleted" id="show_deleted" value="yes" {{ $showDeleted === 'yes' ? 'checked' : '' }}>
-                            <label class="form-check-label" for="show_deleted">
-                                Display hidden orders
-                            </label>
-                        </div>
-                    </div>
-                    <div class="form-group col-md-2">
-                        <label for="order_status">Order status</label>
-                        <select class="form-control" name="order_status" id="order_status">
-                            <option value="">Tất cả</option>
-                            @foreach($ORDERS_STATUSES as $key => $status)
-                                <option value="{{$key}}" {{ $key == $order_status ? 'selected' : '' }}>
-                                    {{$status}}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="form-group col-md-2">
-                        <label for="min_price">Min Price</label>
-                        <input type="number" class="form-control" id="min_price" name="min_price" value="{{ request('min_price') }}" placeholder="0" min="0">
-                    </div>
-                    <div class="form-group col-md-2">
-                        <label for="max_price">Max Price</label>
-                        <input type="number" class="form-control" id="max_price" name="max_price" value="{{ request('max_price') }}" placeholder="">
-                    </div>
-                    <div class="form-group col-md-4">
-                        <label for="search_term">Search</label>
-                        <div class="input-group input-group-sm">
-                            <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search" value="{{ request('search_term', $searchTerm) }}" name="search_term">
-                            <div class="input-group-append">
-                                <button class="btn btn-navbar" type="submit">
-                                    <i class="fas fa-search"></i>
-                                </button>
-                            </div>
-                        </div>
+                <input type="hidden" name="show_deleted" value="{{ request('show_deleted', $showDeleted) }}">
+                <input type="hidden" name="order_status" value="{{ request('order_status', $order_status) }}">
+                <input type="hidden" name="payment_status" value="{{ request('payment_status', $payment_status) }}">
+                <input type="hidden" name="page" value="{{ $orders->currentPage() }}">
+                <div class="input-group input-group-sm">
+                    <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search" value="{{ request('search_term', $searchTerm) }}" name="search_term">
+                    <div class="input-group-append">
+                        <button class="btn btn-navbar" type="submit">
+                            <i class="fas fa-search"></i>
+                        </button>
                     </div>
                 </div>
             </form>
+        <div class="content">
+            <form method="GET" action="{{ route('orders') }}" style="padding-left: 13px;">
+                <input type="hidden" name="sort_by" value="{{ request('sort_by', $sortBy) }}">
+                <input type="hidden" name="sort_direction" value="{{ request('sort_direction', $sortDirection) }}">
+                <input type="hidden" name="search_term" value="{{ request('search_term', $searchTerm) }}">
+                <input type="hidden" name="page" value="{{ $orders->currentPage() }}">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="show_deleted" id="show_deleted" value="yes" {{ $showDeleted === 'yes' ? 'checked' : '' }}>
+                    <label class="form-check-label" for="show_deleted">
+                        Hiển thị đơn hàng đã ẩn
+                    </label>
+                </div>
 
+                <div class="form-group">
+                    <label for="order_status">Trạng thái đơn hàng</label>
+                    <select class="form-control" name="order_status" id="order_status">
+                        <option value="">Tất cả</option>
+                        @foreach($ORDERS_STATUSES as $key => $status)
+                            <option value="{{$key}}" {{ $key == $order_status ? 'selected' : '' }}>
+                                {{$status}}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+{{--                <div class="form-group">--}}
+{{--                    <label for="payment_status">Trạng thái thanh toán</label>--}}
+{{--                    <select class="form-control" name="payment_status" id="payment_status">--}}
+{{--                        <option value="">Tất cả</option>--}}
+{{--                        @foreach($PAYMENT_STATUSES as $key => $data)--}}
+{{--                            <option value="{{$data['status']}}" {{ $data['status'] == $payment_status ? 'selected' : '' }}>--}}
+{{--                                {{ $data['status'] }}--}}
+{{--                            </option>--}}
+{{--                        @endforeach--}}
+{{--                    </select>--}}
+{{--                </div>--}}
+
+                <button type="submit" class="btn btn-primary">Lọc</button>
+            </form>
             <div class="container-fluid">
                 <div class="row">
                     <div class="div col-md-12">
@@ -177,7 +173,7 @@
                                          'total_amount' => ['name' => 'Tổng chi phí', 'sortable' => false],
                                          'payment_type' => ['name' => 'Phương thức thanh toán', 'sortable' => true],
 //                                         'pending_payment' => ['name' => 'Cần thanh toán', 'sortable' => true],
-                                         'payment_status' => ['name' => 'Paid', 'sortable' => true],
+//                                         'payment_status' => ['name' => 'Trạng thái thanh toán', 'sortable' => true],
                                          'status' => ['name' => 'Trạng thái đơn hàng', 'sortable' => true],
                                          'created_at' => ['name' => 'Ngày tạo', 'sortable' => true],
                                      ];
@@ -193,7 +189,7 @@
                                                         'show_deleted' => request('show_deleted', $showDeleted),
                                                         'page' => $orders->currentPage(), // Preserve current page
                                                         'order_status' => $order_status,
-//                                                        'payment_status' => $payment_status
+                                                        'payment_status' => $payment_status
                                                     ]) }}">
                                                     {{ $details['name'] }}
                                                     @if($sortBy === $column)
@@ -228,11 +224,10 @@
 //                                        $pendingPayment = $order->pending_payment ?? 0;
 //                                        $paymentStatus = $order->payment_status ?? '';
                                         $orderStatus = $order->status ?? '';
-                                        $paymentStatus = $order->payment_status ?? '';
                                         $createdAt = $order->created_at->format('H:i d/m/Y');
                                     @endphp
                                     <tr>
-                                        <td style="width:auto;">
+                                        <td style="width:10%;">
                                             <span style="position: relative">
                                             {{ $orderId }}
                                                 @if(trim($order->note??''))
@@ -245,7 +240,10 @@
                                             </span>
                                         </td>
                                         <td>
-                                            {{ $user->id }}
+
+                                                {{ $user->id }}
+
+
                                         </td>
                                         <td>{{$name}}</td>
                                         <td>{{$phone}}</td>
@@ -253,44 +251,33 @@
                                             $ {{$totalAmount}}
                                         </td>
                                         <td>{{$paymentType}}</td>
-                                        <td><div class="paymentSta" style="background-color:{{$paymentStatus == 1 ? '#373434;' : '#01a935' }}">
-                                                {{$PAYMENT_STATUSES[$paymentStatus]}}
-                                            </div>
-
-                                        </td>
                                         <td>
-                                            <div class="paymentSta" style="color:{{$STATUS_COLORS[$orderStatus]}}; font-size: 1.1em">
-                                                {{$ORDERS_STATUSES[$orderStatus]}}
-                                            </div>
-{{--                                            <div class="form-group" style="position: relative">--}}
-{{--                                                <select--}}
-{{--                                                    class="form-control order-status"--}}
-{{--                                                    name="orderStatus"--}}
-{{--                                                    data-order-id="{{ $order->id }}"--}}
-{{--                                                    data-current-status="{{ $orderStatus }}"--}}
-{{--                                                    data-user-level="{{ Auth::user()->level }}"--}}
-{{--                                                >--}}
-{{--                                                    @foreach( $ORDERS_STATUSES as $key => $status)--}}
-{{--                                                        <option--}}
-{{--                                                            value="{{$key}}" {{ $key === $orderStatus ? 'selected' : '' }} data-color="{{$STATUS_COLORS[$key]}}"--}}
+                                            <div class="form-group" style="position: relative">
+                                                <select
+                                                    class="form-control order-status"
+                                                    name="orderStatus"
+                                                    data-order-id="{{ $order->id }}"
+                                                    data-current-status="{{ $orderStatus }}"
+                                                    data-user-level="{{ Auth::user()->level }}"
+                                                >
+                                                    @foreach( $ORDERS_STATUSES as $key => $status)
+                                                        <option
+                                                            value="{{$key}}" {{ $key === $orderStatus ? 'selected' : '' }} data-color="{{$STATUS_COLORS[$key]}}"
 
-{{--                                                            @if (Auth::user()->level !== App\Utilities\Constant::user_level_superAdmin && $key < $orderStatus)--}}
-{{--                                                                disabled--}}
-{{--                                                            @endif--}}
-{{--                                                        >--}}
-{{--                                                            {{ $status }}--}}
-{{--                                                        </option>--}}
-{{--                                                    @endforeach--}}
-{{--                                                </select>--}}
-{{--                                                <span>{{$ORDERS_STATUSES[$orderStatus]}}</span>--}}
-{{--                                                --}}
-{{--                                                <div class="color-indicator" id="indicator_{{$order->id}}" style="background-color: {{ $STATUS_COLORS[$orderStatus] ?? 'transparent' }};"></div>--}}
+                                                            @if (Auth::user()->level !== App\Utilities\Constant::user_level_superAdmin && $key < $orderStatus)
+                                                                disabled
+                                                            @endif
+                                                        >
+                                                            {{ $status }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                                <div class="color-indicator" id="indicator_{{$order->id}}" style="background-color: {{ $STATUS_COLORS[$orderStatus] ?? 'transparent' }};"></div>
 {{--                                                @if($orderStatus === 'Đã Hủy (khách yc hủy)' || $orderStatus === 'Đã Hủy (Hết hàng)')--}}
 {{--                                                    <a class="cancelReasonBox" id="cancelReasonBox_{{$order->id}}" href="javascript:void(0)" onclick="showCancelReason(this, {{$order->id}})"><i class="fas fa-comment-dots"></i></a>--}}
 {{--                                                @endif--}}
-{{--                                                <input type="hidden" class="previous-order-status" value="{{ $order->status }}">--}}
-{{--                                            </div>--}}
-
+                                                <input type="hidden" class="previous-order-status" value="{{ $order->status }}">
+                                            </div>
                                         </td>
                                         <td>{{ $createdAt }}</td>
                                         <td>

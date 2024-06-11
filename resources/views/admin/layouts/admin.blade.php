@@ -9,21 +9,25 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-
+    <link rel="icon" href={{asset("front/img/mini-logo-3.svg")}} type="image/x-icon">
     @yield('title')
 
     <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="{{asset('admins/css/all.min.css')}}">
-    <!-- Theme style -->
+    <link rel="stylesheet" href="{{asset('admins/css/all.css')}}">
+    <link rel="stylesheet" href="{{asset('admins/css/bootstrap.min.css')}}">
     <link rel="stylesheet" href="{{asset('admins/css/adminlte.min.css')}}">
-    <link rel="stylesheet" href="{{asset('admins/css/adminlte.min.css')}}">
-    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.14.0/build/css/alertify.min.css"/>
-    <!-- Default theme -->
-    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.14.0/build/css/themes/default.min.css"/>
-    <!-- Semantic UI theme -->
-    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.14.0/build/css/themes/semantic.min.css"/>
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.0/css/all.css">
 
+    <!-- Theme style -->
+    <link rel="stylesheet" href="{{asset('admins/css/__cdn.jsdelivr.net_npm_alertifyjs@1.14.0_build_css_alertify.css')}}">
+    <link rel="stylesheet" href="{{asset('admins/css/__cdn.jsdelivr.net_npm_alertifyjs@1.14.0_build_css_themes_bootstrap.css')}}">
+    <link rel="stylesheet" href="{{asset('admins/css/__cdn.jsdelivr.net_npm_alertifyjs@1.14.0_build_css_themes_default.css')}}">
+    <link rel="stylesheet" href="{{asset('admins/css/__cdn.jsdelivr.net_npm_alertifyjs@1.14.0_build_css_themes_semantic.css')}}">
+    <link rel="stylesheet" href="{{asset('admins/css/http_cdnjs.cloudflare.com_ajax_libs_dropzone_5.9.3_dropzone.css')}}">
+    <link rel="stylesheet" href="{{asset('admins/css/all.min.css')}}">
+
+{{--    <link rel="stylesheet" href="{{asset('admins/css/all.css')}}">--}}
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.0/css/all.css">
+{{--    dùng file fontawsome lỗi--}}
 
     <!-- Google Font: Source Sans Pro -->
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
@@ -78,7 +82,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
 <!-- AdminLTE App -->
 <script src="{{asset('admins/js/adminlte.min.js')}}"></script>
-<script src="//cdn.jsdelivr.net/npm/alertifyjs@1.14.0/build/alertify.min.js"></script>
+<script src="{{asset('admins/js/__cdn.jsdelivr.net_npm_alertifyjs@1.14.0_build_alertify.js')}}"></script>
+<script src="{{asset('admins/js/http_cdnjs.cloudflare.com_ajax_libs_dropzone_5.9.3_dropzone.js')}}"></script>
 @yield('this-js')
 @if (session('error'))
     <script>
