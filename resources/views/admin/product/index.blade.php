@@ -52,97 +52,88 @@
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
         @include('admin.partials.content-header',['name' => '', 'key' => 'Danh Sách Sản Phẩm','url' => ''])
-
+        <hr style="margin-block: 5px;">
         @php
             $FEATURES = Constant::$FEATURES;
     //        $PAYMENT_STATUSES = App\Constants\OrderConstants::PAYMENTSTATUSES;
             $STATUS_COLORS = Constant::STATUSCOLORS;
         @endphp
-        <form class="form-inline ml-3" method="GET" action="{{ route('products') }}">
-            <input type="hidden" name="sort_by" value="{{ request('sort_by', $sortBy) }}">
-            <input type="hidden" name="sort_direction" value="{{ request('sort_direction', $sortDirection) }}">
-            <input type="hidden" name="show_deleted" value="{{ request('show_deleted', $showDeleted) }}">
+{{--        <form class="form-inline ml-3" method="GET" action="{{ route('products') }}">--}}
+{{--            <input type="hidden" name="sort_by" value="{{ request('sort_by', $sortBy) }}">--}}
+{{--            <input type="hidden" name="sort_direction" value="{{ request('sort_direction', $sortDirection) }}">--}}
+{{--            <input type="hidden" name="show_deleted" value="{{ request('show_deleted', $showDeleted) }}">--}}
 {{--            <input type="hidden" name="page" value="{{ $products->currentPage() }}">--}}
-            <div class="input-group input-group-sm">
-                <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search"
-                       value="{{ request('search_term', $searchTerm) }}" name="search_term">
-                <div class="input-group-append">
-                    <button class="btn btn-navbar" type="submit">
-                        <i class="fas fa-search"></i>
-                    </button>
-                </div>
-            </div>
-        </form>
+{{--            <div class="input-group input-group-sm">--}}
+{{--                <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search"--}}
+{{--                       value="{{ request('search_term', $searchTerm) }}" name="search_term">--}}
+{{--                <div class="input-group-append">--}}
+{{--                    <button class="btn btn-navbar" type="submit">--}}
+{{--                        <i class="fas fa-search"></i>--}}
+{{--                    </button>--}}
+{{--                </div>--}}
+{{--            </div>--}}
+{{--        </form>--}}
+        <div class="content">
+            <form method="GET" action="{{ route('products') }}" class="p-3">
+                <input type="hidden" name="sort_by" value="{{ request('sort_by', $sortBy) }}">
+                <input type="hidden" name="sort_direction" value="{{ request('sort_direction', $sortDirection) }}">
+                {{--                <input type="hidden" name="page" value="{{ $orders->currentPage() }}">--}}
 
-
-
-
-        <form method="GET" action="{{ route('orders') }}" class="p-3">
-            <input type="hidden" name="sort_by" value="{{ request('sort_by', $sortBy) }}">
-            <input type="hidden" name="sort_direction" value="{{ request('sort_direction', $sortDirection) }}">
-            {{--                <input type="hidden" name="page" value="{{ $orders->currentPage() }}">--}}
-
-            <div class="form-row">
-                <div class="form-group col-md-2">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="show_deleted" id="show_deleted" value="yes" {{ $showDeleted === 'yes' ? 'checked' : '' }}>
-                        <label class="form-check-label" for="show_deleted">
-                            Display hidden orders
-                        </label>
+                <div class="form-row">
+                    <div class="form-group col-md-2">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="show_deleted" id="show_deleted" value="yes" {{ $showDeleted === 'yes' ? 'checked' : '' }}>
+                            <label class="form-check-label" for="show_deleted">
+                                Display hidden products?
+                            </label>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group col-md-2">
-                    <label for="order_status">Order status</label>
-                    <select class="form-control" name="order_status" id="order_status">
-                        <option value="">Tất cả</option>
-                        @foreach($ORDERS_STATUSES as $key => $status)
-                            <option value="{{$key}}" {{ $key == $order_status ? 'selected' : '' }}>
-                                {{$status}}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="form-group col-md-2">
-                    <label for="min_price">Min Price</label>
-                    <input type="number" class="form-control" id="min_price" name="min_price" value="{{ request('min_price') }}" placeholder="0" min="0">
-                </div>
-                <div class="form-group col-md-2">
-                    <label for="max_price">Max Price</label>
-                    <input type="number" class="form-control" id="max_price" name="max_price" value="{{ request('max_price') }}" placeholder="">
-                </div>
-                <div class="form-group col-md-4">
-                    <label for="search_term">Search</label>
-                    <div class="input-group input-group-sm">
-                        <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search" value="{{ request('search_term', $searchTerm) }}" name="search_term">
-                        <div class="input-group-append">
-                            <button class="btn btn-navbar" type="submit">
-                                <i class="fas fa-search"></i>
-                            </button>
+                    {{--                <div class="form-group col-md-2">--}}
+                    {{--                    <label for="order_status">Order status</label>--}}
+                    {{--                    <select class="form-control" name="order_status" id="order_status">--}}
+                    {{--                        <option value="">Tất cả</option>--}}
+                    {{--                        @foreach($ORDERS_STATUSES as $key => $status)--}}
+                    {{--                            <option value="{{$key}}" {{ $key == $order_status ? 'selected' : '' }}>--}}
+                    {{--                                {{$status}}--}}
+                    {{--                            </option>--}}
+                    {{--                        @endforeach--}}
+                    {{--                    </select>--}}
+                    {{--                </div>--}}
+                    <div class="form-group col-md-2">
+                        <label for="min_price">Min Price</label>
+                        <input type="number" class="form-control" id="min_price" name="min_price" value="{{ request('min_price',$minPrice) }}" placeholder="0" min="0">
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label for="max_price">Max Price</label>
+                        <input type="number" class="form-control" id="max_price" name="max_price" value="{{ request('max_price',$maxPrice) }}" placeholder="">
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="search_term">Search</label>
+                        <div class="input-group input-group-sm">
+                            <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search" value="{{ request('search_term', $searchTerm) }}" name="search_term">
+                            <div class="input-group-append">
+                                <button class="btn btn-navbar" type="submit">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </form>
-
-
-
-
-
-        <div class="content">
-            <form method="GET" action="{{ route('products') }}" style="padding-left: 13px;">
-                <input type="hidden" name="sort_by" value="{{ request('sort_by', $sortBy) }}">
-                <input type="hidden" name="sort_direction" value="{{ request('sort_direction', $sortDirection) }}">
-                <input type="hidden" name="search_term" value="{{ request('search_term', $searchTerm) }}">
-                <input type="hidden" name="page" value="{{ $products->currentPage() }}">
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="show_deleted" id="show_deleted"
-                           value="yes" {{ $showDeleted === 'yes' ? 'checked' : '' }}>
-                    <label class="form-check-label" for="show_deleted">
-                        Hiển thị Sản Phẩm đã ẩn
-                    </label>
-                </div>
-                <button type="submit" class="btn btn-primary">Lọc</button>
             </form>
+{{--            <form method="GET" action="{{ route('products') }}" style="padding-left: 13px;">--}}
+{{--                <input type="hidden" name="sort_by" value="{{ request('sort_by', $sortBy) }}">--}}
+{{--                <input type="hidden" name="sort_direction" value="{{ request('sort_direction', $sortDirection) }}">--}}
+{{--                <input type="hidden" name="search_term" value="{{ request('search_term', $searchTerm) }}">--}}
+{{--                <input type="hidden" name="page" value="{{ $products->currentPage() }}">--}}
+{{--                <div class="form-check">--}}
+{{--                    <input class="form-check-input" type="checkbox" name="show_deleted" id="show_deleted"--}}
+{{--                           value="yes" {{ $showDeleted === 'yes' ? 'checked' : '' }}>--}}
+{{--                    <label class="form-check-label" for="show_deleted">--}}
+{{--                        Hiển thị Sản Phẩm đã ẩn--}}
+{{--                    </label>--}}
+{{--                </div>--}}
+{{--                <button type="submit" class="btn btn-primary">Lọc</button>--}}
+{{--            </form>--}}
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-md-12" style="display: flex; justify-content: end;">
@@ -186,6 +177,8 @@
                                                         'search_term' => request('search_term', $searchTerm),
                                                         'show_deleted' => request('show_deleted', $showDeleted),
                                                         'page' => $products->currentPage(), // Preserve current page
+                                                        'max_price' => request('max_price',$maxPrice),
+                                                        'min_price' => request('min_price',$minPrice),
                                                     ]) }}">
                                                 {{ $details['name'] }}
                                                 @if($sortBy === $column)
@@ -299,6 +292,8 @@
                                     'sort_direction' =>  request('sort_direction', $sortDirection),
                                     'show_deleted' => request('show_deleted', $showDeleted),
                                     'search_term' => request('search_term', $searchTerm),
+                                    'max_price' => request('max_price',$maxPrice),
+                                    'min_price' => request('min_price',$minPrice),
                                 ])->links('vendor.pagination.bootstrap-4') }}
                         </div>
                     </div>

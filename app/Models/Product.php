@@ -29,7 +29,7 @@ class Product extends Model
     }
     public function productDetails()
     {
-        return $this->hasMany(ProductDetail::class,'product_id','id');
+        return $this->hasMany(ProductDetail::class);
     }
     public function productComments()
     {

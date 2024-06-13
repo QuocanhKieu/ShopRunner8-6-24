@@ -17,10 +17,13 @@
         input[type=number] {
             -moz-appearance: textfield;
         }
+
         .deliveryFeeInput {
-            max-width: 90px; padding-block: 0;
+            max-width: 90px;
+            padding-block: 0;
             height: auto !important;
         }
+
         .color-indicator {
             height: 8px;
             width: 100%;
@@ -28,6 +31,7 @@
             position: absolute;
             top: 0;
         }
+
         .cancelReasonBox {
             position: absolute;
             top: -22px;
@@ -35,15 +39,18 @@
             font-size: 24px;
             color: #f14d68;
         }
-        .staffNote{
+
+        .staffNote {
             vertical-align: text-top;
             font-size: 21px;
             margin-left: 10px;
 
         }
-        td, th{
+
+        td, th {
             vertical-align: middle !important;
         }
+
         #loading-spinner {
             position: fixed;
             top: 50%;
@@ -62,8 +69,12 @@
         }
 
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
         .staffNoteWarning {
@@ -73,29 +84,35 @@
             right: -8px;
             color: #ff031b;
         }
+
         .orderNoteDisplay {
             position: absolute;
             font-size: 22px;
             top: -36px;
             right: -16px;
         }
+
         .shippingInfoIcon {
             color: #22d271;
         }
+
         #order_status, #payment_status {
             /*min-width: 300px;*/
             /*width: 30%;*/
         }
+
         input[type='search'] {
-            height :auto !important;
+            height: auto !important;
             font-size: 1.175rem !important;
         }
+
         .paymentSta {
-            color : white;
+            color: white;
             padding: 2px;
             white-space: nowrap;
             border-radius: 3px;
         }
+
         /*.delete-order {*/
         /*    padding: 5px;*/
         /*}*/
@@ -108,18 +125,20 @@
         $PAYMENT_STATUSES = Constant::$PAYMENT_STATUS;
         $STATUS_COLORS = App\Utilities\Constant::STATUSCOLORS;
     @endphp
-        <div class="content-wrapper">
+    <div class="content-wrapper">
         @include('admin.partials.content-header',['name' => '', 'key' => 'Danh Sánh Đơn Hàng','url' => ''])
+        <hr style="margin-block: 5px;">
         <div class="content">
             <form method="GET" action="{{ route('orders') }}" class="p-3">
                 <input type="hidden" name="sort_by" value="{{ request('sort_by', $sortBy) }}">
                 <input type="hidden" name="sort_direction" value="{{ request('sort_direction', $sortDirection) }}">
-{{--                <input type="hidden" name="page" value="{{ $orders->currentPage() }}">--}}
+                {{--                <input type="hidden" name="page" value="{{ $orders->currentPage() }}">--}}
 
                 <div class="form-row">
                     <div class="form-group col-md-2">
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="show_deleted" id="show_deleted" value="yes" {{ $showDeleted === 'yes' ? 'checked' : '' }}>
+                            <input class="form-check-input" type="checkbox" name="show_deleted" id="show_deleted"
+                                   value="yes" {{ $showDeleted === 'yes' ? 'checked' : '' }}>
                             <label class="form-check-label" for="show_deleted">
                                 Display hidden orders
                             </label>
@@ -138,16 +157,20 @@
                     </div>
                     <div class="form-group col-md-2">
                         <label for="min_price">Min Price</label>
-                        <input type="number" class="form-control" id="min_price" name="min_price" value="{{ request('min_price') }}" placeholder="0" min="0">
+                        <input type="number" class="form-control" id="min_price" name="min_price"
+                               value="{{ request('min_price',$minPrice) }}" placeholder="0" min="0">
                     </div>
                     <div class="form-group col-md-2">
                         <label for="max_price">Max Price</label>
-                        <input type="number" class="form-control" id="max_price" name="max_price" value="{{ request('max_price') }}" placeholder="">
+                        <input type="number" class="form-control" id="max_price" name="max_price"
+                               value="{{ request('max_price',$maxPrice) }}" placeholder="">
                     </div>
                     <div class="form-group col-md-4">
                         <label for="search_term">Search</label>
                         <div class="input-group input-group-sm">
-                            <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search" value="{{ request('search_term', $searchTerm) }}" name="search_term">
+                            <input class="form-control form-control-navbar" type="search" placeholder="Search"
+                                   aria-label="Search" value="{{ request('search_term', $searchTerm) }}"
+                                   name="search_term">
                             <div class="input-group-append">
                                 <button class="btn btn-navbar" type="submit">
                                     <i class="fas fa-search"></i>
@@ -194,6 +217,8 @@
                                                         'page' => $orders->currentPage(), // Preserve current page
                                                         'order_status' => $order_status,
 //                                                        'payment_status' => $payment_status
+                                                        'max_price' => request('max_price',$maxPrice),
+                                                        'min_price' => request('min_price',$minPrice),
                                                     ]) }}">
                                                     {{ $details['name'] }}
                                                     @if($sortBy === $column)
@@ -205,31 +230,31 @@
                                             @endif
                                         </th>
                                     @endforeach
-                                        <th>Action</th>
+                                    <th>Action</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 @foreach($orders as $order)
                                     @php
-//                                    dd($order);
-                                        $orderDetail = $order->orderDetails->first();
+                                        //                                    dd($order);
+                                                                                $orderDetail = $order->orderDetails->first();
 
-                                        $user = $order->user;
-//                                        $voucher = $order->voucher;
-//                                        $shippingInfo = $order->shippingInfo;
-                                        $orderId = $order->id;
-                                        $name = $order->first_name.' '.$order->last_name;
-//                                        $subTotal = $orderDetail->sub_total_amount;//tiền hàng
-//                                        $totalDiscount = $order->total_discount ?? 0;
-//                                        $deliveryFee = $order->delivery_fee ?? 0;
-                                        $paymentType = $order->payment_type;
-                                        $phone = $order->phone;
-                                        $totalAmount = $orderDetail->total;
-//                                        $pendingPayment = $order->pending_payment ?? 0;
-//                                        $paymentStatus = $order->payment_status ?? '';
-                                        $orderStatus = $order->status ?? '';
-                                        $paymentStatus = $order->payment_status ?? '';
-                                        $createdAt = $order->created_at->format('H:i d/m/Y');
+                                                                                $user = $order->user;
+                                        //                                        $voucher = $order->voucher;
+                                        //                                        $shippingInfo = $order->shippingInfo;
+                                                                                $orderId = $order->id;
+                                                                                $name = $order->first_name.' '.$order->last_name;
+                                        //                                        $subTotal = $orderDetail->sub_total_amount;//tiền hàng
+                                        //                                        $totalDiscount = $order->total_discount ?? 0;
+                                        //                                        $deliveryFee = $order->delivery_fee ?? 0;
+                                                                                $paymentType = $order->payment_type;
+                                                                                $phone = $order->phone;
+                                                                                $totalAmount = $orderDetail->total;
+                                        //                                        $pendingPayment = $order->pending_payment ?? 0;
+                                        //                                        $paymentStatus = $order->payment_status ?? '';
+                                                                                $orderStatus = $order->status ?? '';
+                                                                                $paymentStatus = $order->payment_status ?? '';
+                                                                                $createdAt = $order->created_at->format('H:i d/m/Y');
                                     @endphp
                                     <tr>
                                         <td style="width:auto;">
@@ -253,82 +278,92 @@
                                             $ {{$totalAmount}}
                                         </td>
                                         <td>{{$paymentType}}</td>
-                                        <td><div class="paymentSta" style="background-color:{{$paymentStatus == 1 ? '#373434;' : '#01a935' }}">
+                                        <td>
+                                            <div class="paymentSta"
+                                                 style="background-color:{{$paymentStatus == 1 ? '#373434;' : '#01a935' }}">
                                                 {{$PAYMENT_STATUSES[$paymentStatus]}}
                                             </div>
 
                                         </td>
                                         <td>
-                                            <div class="paymentSta" style="color:{{$STATUS_COLORS[$orderStatus]}}; font-size: 1.1em">
+                                            <div class="paymentSta"
+                                                 style="color:{{$STATUS_COLORS[$orderStatus]}}; font-size: 1.1em">
                                                 {{$ORDERS_STATUSES[$orderStatus]}}
                                             </div>
-{{--                                            <div class="form-group" style="position: relative">--}}
-{{--                                                <select--}}
-{{--                                                    class="form-control order-status"--}}
-{{--                                                    name="orderStatus"--}}
-{{--                                                    data-order-id="{{ $order->id }}"--}}
-{{--                                                    data-current-status="{{ $orderStatus }}"--}}
-{{--                                                    data-user-level="{{ Auth::user()->level }}"--}}
-{{--                                                >--}}
-{{--                                                    @foreach( $ORDERS_STATUSES as $key => $status)--}}
-{{--                                                        <option--}}
-{{--                                                            value="{{$key}}" {{ $key === $orderStatus ? 'selected' : '' }} data-color="{{$STATUS_COLORS[$key]}}"--}}
+                                            {{--                                            <div class="form-group" style="position: relative">--}}
+                                            {{--                                                <select--}}
+                                            {{--                                                    class="form-control order-status"--}}
+                                            {{--                                                    name="orderStatus"--}}
+                                            {{--                                                    data-order-id="{{ $order->id }}"--}}
+                                            {{--                                                    data-current-status="{{ $orderStatus }}"--}}
+                                            {{--                                                    data-user-level="{{ Auth::user()->level }}"--}}
+                                            {{--                                                >--}}
+                                            {{--                                                    @foreach( $ORDERS_STATUSES as $key => $status)--}}
+                                            {{--                                                        <option--}}
+                                            {{--                                                            value="{{$key}}" {{ $key === $orderStatus ? 'selected' : '' }} data-color="{{$STATUS_COLORS[$key]}}"--}}
 
-{{--                                                            @if (Auth::user()->level !== App\Utilities\Constant::user_level_superAdmin && $key < $orderStatus)--}}
-{{--                                                                disabled--}}
-{{--                                                            @endif--}}
-{{--                                                        >--}}
-{{--                                                            {{ $status }}--}}
-{{--                                                        </option>--}}
-{{--                                                    @endforeach--}}
-{{--                                                </select>--}}
-{{--                                                <span>{{$ORDERS_STATUSES[$orderStatus]}}</span>--}}
-{{--                                                --}}
-{{--                                                <div class="color-indicator" id="indicator_{{$order->id}}" style="background-color: {{ $STATUS_COLORS[$orderStatus] ?? 'transparent' }};"></div>--}}
-{{--                                                @if($orderStatus === 'Đã Hủy (khách yc hủy)' || $orderStatus === 'Đã Hủy (Hết hàng)')--}}
-{{--                                                    <a class="cancelReasonBox" id="cancelReasonBox_{{$order->id}}" href="javascript:void(0)" onclick="showCancelReason(this, {{$order->id}})"><i class="fas fa-comment-dots"></i></a>--}}
-{{--                                                @endif--}}
-{{--                                                <input type="hidden" class="previous-order-status" value="{{ $order->status }}">--}}
-{{--                                            </div>--}}
+                                            {{--                                                            @if (Auth::user()->level !== App\Utilities\Constant::user_level_superAdmin && $key < $orderStatus)--}}
+                                            {{--                                                                disabled--}}
+                                            {{--                                                            @endif--}}
+                                            {{--                                                        >--}}
+                                            {{--                                                            {{ $status }}--}}
+                                            {{--                                                        </option>--}}
+                                            {{--                                                    @endforeach--}}
+                                            {{--                                                </select>--}}
+                                            {{--                                                <span>{{$ORDERS_STATUSES[$orderStatus]}}</span>--}}
+                                            {{--                                                --}}
+                                            {{--                                                <div class="color-indicator" id="indicator_{{$order->id}}" style="background-color: {{ $STATUS_COLORS[$orderStatus] ?? 'transparent' }};"></div>--}}
+                                            {{--                                                @if($orderStatus === 'Đã Hủy (khách yc hủy)' || $orderStatus === 'Đã Hủy (Hết hàng)')--}}
+                                            {{--                                                    <a class="cancelReasonBox" id="cancelReasonBox_{{$order->id}}" href="javascript:void(0)" onclick="showCancelReason(this, {{$order->id}})"><i class="fas fa-comment-dots"></i></a>--}}
+                                            {{--                                                @endif--}}
+                                            {{--                                                <input type="hidden" class="previous-order-status" value="{{ $order->status }}">--}}
+                                            {{--                                            </div>--}}
 
                                         </td>
                                         <td>{{ $createdAt }}</td>
                                         <td>
                                             <div class="dropdown" style=" margin-bottom: 5px; margin-right: 5px">
-                                                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <button class="btn btn-secondary dropdown-toggle" type="button"
+                                                        id="dropdownMenuButton" data-toggle="dropdown"
+                                                        aria-haspopup="true" aria-expanded="false">
                                                     Actions
                                                 </button>
-                                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton" id="actionOptions_{{$order->id}}">
-                                                    <a class="dropdown-item" href="{{route('orders.orderDetails',['order'=> $order->id])}}"><i class="fas fa-eye"></i> Order Details</a>
-{{--                                                    @if($orderStatus === 'Đã xác nhận' || $orderStatus === 'Chờ xác nhận')--}}
-{{--                                                    <a class="dropdown-item" href="{{route('orders.addDelivery',['orderId'=> $order->id])}}" style="position: relative">--}}
-{{--                                                        <i class="fas fa-truck"></i> Add Delivery--}}
-{{--                                                        @if($order->shippingInfo)--}}
-{{--                                                            <i class="fas fa-check-circle shippingInfoIcon"></i>--}}
-{{--                                                        @endif--}}
-{{--                                                    </a>--}}
-{{--                                                    <a class="dropdown-item" href="{{route('orders.editOrderInfo',['orderId'=> $order->id])}}"><i class="fas fa-edit"></i>Edit OrderInfo</a>--}}
-{{--                                                    @endif--}}
+                                                <div class="dropdown-menu dropdown-menu-right"
+                                                     aria-labelledby="dropdownMenuButton"
+                                                     id="actionOptions_{{$order->id}}">
+                                                    <a class="dropdown-item"
+                                                       href="{{route('orders.orderDetails',['order'=> $order->id])}}"><i
+                                                            class="fas fa-eye"></i> Order Details</a>
+                                                    {{--                                                    @if($orderStatus === 'Đã xác nhận' || $orderStatus === 'Chờ xác nhận')--}}
+                                                    {{--                                                    <a class="dropdown-item" href="{{route('orders.addDelivery',['orderId'=> $order->id])}}" style="position: relative">--}}
+                                                    {{--                                                        <i class="fas fa-truck"></i> Add Delivery--}}
+                                                    {{--                                                        @if($order->shippingInfo)--}}
+                                                    {{--                                                            <i class="fas fa-check-circle shippingInfoIcon"></i>--}}
+                                                    {{--                                                        @endif--}}
+                                                    {{--                                                    </a>--}}
+                                                    {{--                                                    <a class="dropdown-item" href="{{route('orders.editOrderInfo',['orderId'=> $order->id])}}"><i class="fas fa-edit"></i>Edit OrderInfo</a>--}}
+                                                    {{--                                                    @endif--}}
                                                     <!-- Add more actions as needed... -->
                                                 </div>
                                             </div>
                                             @if($order->deleted_at)
                                                 <button type="button" class="btn btn-success"
                                                         onclick="restoreOrder(this, {{ $order->id}})" title="Restore"
-                                                        id="restoreBtn"> <i class="fas fa-undo"></i>
+                                                        id="restoreBtn"><i class="fas fa-undo"></i>
                                                 </button>
                                             @else
-                                                <a title="Delete" href="#" class="btn btn-danger delete-order" style="  "
+                                                <a title="Delete" href="#" class="btn btn-danger delete-order"
+                                                   style="  "
                                                    data-url="{{ route('orders.delete', $order->id) }}">
                                                     <i class="fas fa-trash"></i>
                                                 </a>
                                             @endif
-{{--                                            <a class="staffNote" title="Staff Note" href="javascript:void(0)" onclick="showStaffNote(this, {{$order->id}})" style="position: relative" id="staffNote_{{$order->id}}">--}}
-{{--                                                <i class="fas fa-user-edit"></i>--}}
-{{--                                                @if(trim($order->staff_note??''))--}}
-{{--                                                    <i class="fas fa-exclamation-triangle staffNoteWarning" id="staffNoteWarning_{{$order->id}}"></i>--}}
-{{--                                                @endif--}}
-{{--                                            </a>--}}
+                                            {{--                                            <a class="staffNote" title="Staff Note" href="javascript:void(0)" onclick="showStaffNote(this, {{$order->id}})" style="position: relative" id="staffNote_{{$order->id}}">--}}
+                                            {{--                                                <i class="fas fa-user-edit"></i>--}}
+                                            {{--                                                @if(trim($order->staff_note??''))--}}
+                                            {{--                                                    <i class="fas fa-exclamation-triangle staffNoteWarning" id="staffNoteWarning_{{$order->id}}"></i>--}}
+                                            {{--                                                @endif--}}
+                                            {{--                                            </a>--}}
 
                                         </td>
                                     </tr>
@@ -343,6 +378,8 @@
                                     'search_term' => request('search_term', $searchTerm),
                                     'order_status' => request('order_status', $order_status),
 //                                    'payment_status' => $payment_status,
+                                    'max_price' => request('max_price',$maxPrice),
+                                    'min_price' => request('min_price',$minPrice),
                                 ])->links('vendor.pagination.bootstrap-4') }}
                             </div>
                         </div>
@@ -353,10 +390,6 @@
         </div>
         <!-- /.content -->
     </div>
-    <div id="loading-spinner" style="display: none;">
-        <div class="spinner"></div>
-    </div>
-
 @endsection
 @section('this-js')
     <script type="text/javascript">
@@ -370,12 +403,12 @@
                 method: 'GET',
                 data: {
                     orderId: orderId,
-                },beforeSend: function() {
+                }, beforeSend: function () {
                     // Disable the link
                     $this.addClass('disabled');
                     $this.css('pointer-events', 'none');
                 },
-                complete: function() {
+                complete: function () {
                     // Enable the link
                     $this.removeClass('disabled');
                     $this.css('pointer-events', '');
@@ -383,11 +416,11 @@
                 // headers: {
                 //     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 // },
-                success: function(response) {
+                success: function (response) {
                     if (response.success) {
                         orderNote = response.orderNote;
-                        alertify.alert( 'Lời nhắn của Khách Hàng', orderNote
-                            , function() {
+                        alertify.alert('Lời nhắn của Khách Hàng', orderNote
+                            , function () {
                                 alertify.success('Ok');
                             }).set('label', 'Xác Nhận');
                     } else {
@@ -395,14 +428,14 @@
                         orderNote = ''
                     }
                 },
-                error: function(xhr, status, error) {
+                error: function (xhr, status, error) {
                     console.error(xhr.responseText);
                     alertify.error(xhr.responseText);
                 }
             });
         }
 
-        $(document).ready(function() {
+        $(document).ready(function () {
             function updateColor($select) {
                 var selectedOption = $select.find('option:selected');
 
@@ -415,13 +448,15 @@
                 // $select.css('background-color', color);
                 $select.siblings('.color-indicator').css('background-color', color);
             }
+
             // Initialize background colors and color indicators for all selects
-            $('.order-status').each(function() {
+            $('.order-status').each(function () {
                 updateColor($(this));
             });
-                // Event listener for change on .payment-status selects
+
+            // Event listener for change on .payment-status selects
             function disableOptions($select, currentStatus) {
-                $select.find('option').each(function() {
+                $select.find('option').each(function () {
                     var $option = $(this);
                     var optionValue = parseInt($option.val());
                     if (optionValue < currentStatus) {
@@ -432,7 +467,7 @@
                 });
             }
 
-            $('.order-status').change(function() {
+            $('.order-status').change(function () {
                 var $select = $(this);
                 var currentStatus = $select.data('current-status');
                 var userLevel = $select.data('user-level');
@@ -456,7 +491,7 @@
 
                 // Show confirmation dialog using alertify
                 alertify.confirm('Confirm Message', 'Are you sure you want to change Order Status?',
-                    function() { // On confirm
+                    function () { // On confirm
                         var orderId = $select.data('order-id');
                         var newStatus = $select.val();//newStatus for db table but is current status of the select
 
@@ -472,7 +507,7 @@
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
-                            success: function(response) {
+                            success: function (response) {
                                 if (response.success) {
                                     // Update hidden input with new value after successful update
                                     // $hiddenInput.val(newStatus);
@@ -494,7 +529,7 @@
                                     updateColor($select);
                                 }
                             },
-                            error: function(xhr, status, error) {
+                            error: function (xhr, status, error) {
                                 console.error(xhr.responseText);
                                 alertify.error(xhr.responseText);
                                 // Revert to previous value on error
@@ -505,7 +540,7 @@
                             }
                         });
                     },
-                    function() { // On cancel
+                    function () { // On cancel
                         // Revert to previous value
                         $select.val(previousValue);
                         // $select.find('option').removeAttr('selected');
@@ -518,8 +553,8 @@
 
         });
 
-        $(document).ready(function() {
-            $(document).on('click', '.delete-order', function(e) {
+        $(document).ready(function () {
+            $(document).on('click', '.delete-order', function (e) {
                 e.preventDefault(); // Prevent the default action of the link
 
                 var $this = $(this); // Capture the clicked element
@@ -537,49 +572,50 @@
             });
 
         });
+
         function restoreOrder(button, order_id) {
-                // Confirm before sending the AJAX request
-                alertify.confirm('Confirm Message', 'Are you sure you want to restore this order?',
-                    function() {
-                        // Send an AJAX request to restore the order
-                        var url = '{{ route('orders.restore') }}';
-                        $.ajax({
-                            url: url,
-                            type: "put",
-                            data: {
-                                order_id: order_id
-                            },
-                            headers: {
-                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                            },
-                            success: function (response) {
-                                if (response.success) {
-                                    var deleteLink = $('<a>', {
-                                        title: 'Delete',
-                                        href: 'javascript:void(0);',
-                                        class: 'btn btn-danger delete-order',
-                                        'data-url': "{{ route('orders.delete', ':order_id') }}".replace(':order_id', order_id),
-                                        html: '<i class="fas fa-trash"></i>'
-                                    });
+            // Confirm before sending the AJAX request
+            alertify.confirm('Confirm Message', 'Are you sure you want to restore this order?',
+                function () {
+                    // Send an AJAX request to restore the order
+                    var url = '{{ route('orders.restore') }}';
+                    $.ajax({
+                        url: url,
+                        type: "put",
+                        data: {
+                            order_id: order_id
+                        },
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        success: function (response) {
+                            if (response.success) {
+                                var deleteLink = $('<a>', {
+                                    title: 'Delete',
+                                    href: 'javascript:void(0);',
+                                    class: 'btn btn-danger delete-order',
+                                    'data-url': "{{ route('orders.delete', ':order_id') }}".replace(':order_id', order_id),
+                                    html: '<i class="fas fa-trash"></i>'
+                                });
 
-                                    $(button).replaceWith(deleteLink);
-                                    alertify.success(response.message);
+                                $(button).replaceWith(deleteLink);
+                                alertify.success(response.message);
 
-                                } else {
-                                    alertify.error(response.message);
-                                }
-                            },
-                            error: function (xhr, status, error) {
-                                alertify.error('Restore Order thất bại'); // Show generic error message
-                                console.error(xhr.responseText); // Log the error for debugging
+                            } else {
+                                alertify.error(response.message);
                             }
-                        });
-                    },
-                    function() {
-                        alertify.error('Cancel');
-                    }
-                );
-            }
+                        },
+                        error: function (xhr, status, error) {
+                            alertify.error('Restore Order thất bại'); // Show generic error message
+                            console.error(xhr.responseText); // Log the error for debugging
+                        }
+                    });
+                },
+                function () {
+                    alertify.error('Cancel');
+                }
+            );
+        }
     </script>
 @endsection
 

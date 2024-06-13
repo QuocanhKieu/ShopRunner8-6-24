@@ -116,7 +116,7 @@ class OrderController extends Controller
 
             $query->orderBy($sortBy, $sortDirection);
 
-            $orders = $query->paginate(4);
+            $orders = $query->paginate(5);
 
             return view('admin.order.index', compact('orders', 'sortBy', 'sortDirection', 'showDeleted', 'order_status', 'searchTerm', 'minPrice', 'maxPrice'));
         } catch (\Exception $exception) {

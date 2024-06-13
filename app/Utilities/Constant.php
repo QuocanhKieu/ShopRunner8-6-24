@@ -83,6 +83,7 @@ class Constant
     const SIZE_XXL = 7;
     const SIZE_3XL = 8;
     const SIZE_4XL = 9;
+    const FREE_SIZE = 10;
 
     public static $SIZES = [
         self::SIZE_XS => 'XS',
@@ -94,6 +95,7 @@ class Constant
         self::SIZE_XXL => 'XXL',
         self::SIZE_3XL => '3XL',
         self::SIZE_4XL => '4XL',
+        self::FREE_SIZE => 'FREE',
     ];
 
     const BEST_SELLER = 0;

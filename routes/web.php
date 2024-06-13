@@ -145,8 +145,21 @@ Route::middleware(['auth', 'level'])->prefix('admin')->group(function () {
             ->name('products.update');
         Route::get('/edit{id}', [ProductController::class, 'edit'])
             ->name('products.edit');
-        Route::get('/productDetails/{product}', [ProductController::class, 'productsDetails'])
+///////
+        Route::get('/deleteItem/{productDetail}', [ProductController::class, 'deleteItem'])// consider using post for secure
+            ->name('products.deleteItem');
+
+        Route::post('/updateItem/{productDetail}', [ProductController::class, 'updateItem'])
+            ->name('products.updateItem');
+        Route::get('/editItem/{productDetail}', [ProductController::class, 'editItem'])
+            ->name('products.editItem');
+
+        Route::post('/storeItem/{product}', [ProductController::class, 'storeItem'])
+            ->name('products.storeItem');
+//////
+        Route::get('/productDetails/{product}', [ProductController::class, 'productDetails'])
             ->name('products.productDetails');
+
         Route::put('/restore', [ProductController::class, 'restore'])
             ->name('products.restore');
         Route::get('/delete{id}', [ProductController::class, 'delete'])

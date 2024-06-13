@@ -18,22 +18,12 @@
                 </a>
             </div>
         </div>
-        @guest
-            <!-- Show login button -->
-            <a href="{{ route('login') }}" class="btn btn-primary loginButton">Login</a>
-        @else
-            <!-- Show logout button -->
-            <form action="{{ route('logout') }}" method="get">
-                @csrf
-                <button type="submit" onclick="return confirm('Are you sure you want to logout?')" class="btn btn-primary logoutButton">Logout</button>
-            </form>
 
-        @endguest
 
 
         <!-- Sidebar Menu -->
         <nav class="mt-2">
-            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="        overflow: hidden;">
                 <!-- Add icons to the links using the .nav-icon class
                      with font-awesome or any other icon font library -->
 {{--                <li class="nav-item has-treeview menu-open">--}}
@@ -62,7 +52,7 @@
                 <li class="nav-item">
                     <a href="{{route('categories')}}" class="nav-link">
                         <i class="nav-icon fas fa-th"></i>
-                        <p>
+                        <p style="    white-space: nowrap;">
                             Danh Mục Sản Phẩm
                         </p>
                     </a>
@@ -70,7 +60,7 @@
                 <li class="nav-item">
                     <a href="{{route('brands')}}" class="nav-link">
                         <i class="nav-icon fas fa-th"></i>
-                        <p>
+                        <p style="    white-space: nowrap;">
                              Brands
                         </p>
                     </a>
@@ -86,7 +76,7 @@
                 <li class="nav-item">
                     <a href="{{route('products')}}" class="nav-link">
                         <i class="nav-icon fas fa-th"></i>
-                        <p>
+                        <p style="    white-space: nowrap;">
                              Sản Phẩm
                         </p>
                     </a>
@@ -94,7 +84,7 @@
                 <li class="nav-item">
                     <a href="{{route('orders')}}" class="nav-link">
                         <i class="nav-icon fas fa-th"></i>
-                        <p>
+                        <p style="    white-space: nowrap;">
                              Đơn Hàng
                         </p>
                     </a>
@@ -102,7 +92,7 @@
                 <li class="nav-item">
                     <a href="{{route('reviews')}}" class="nav-link">
                         <i class="nav-icon fas fa-th"></i>
-                        <p>
+                        <p style="    white-space: nowrap;">
                              Đánh Giá
                         </p>
                     </a>
@@ -110,7 +100,7 @@
                 <li class="nav-item">
                     <a href="{{route('products')}}" class="nav-link">
                         <i class="nav-icon fas fa-th"></i>
-                        <p>
+                        <p style="    white-space: nowrap;">
                              Người Dùng
                         </p>
                     </a>
@@ -118,7 +108,7 @@
                 <li class="nav-item">
                     <a href="{{route('products')}}" class="nav-link">
                         <i class="nav-icon fas fa-th"></i>
-                        <p>
+                        <p style="    white-space: nowrap;">
                             Mã Giảm Giá
                         </p>
                     </a>

@@ -5,7 +5,7 @@
             <a class="nav-link" data-widget="pushmenu" href="#"><i class="fas fa-bars"></i></a>
         </li>
         <li class="nav-item d-none d-sm-inline-block">
-            <a href="{{asset('admins/index3.html')}}" class="nav-link">Home</a>
+            <a href="{{route('admin')}}" class="nav-link">Home</a>
         </li>
         <li class="nav-item d-none d-sm-inline-block">
             <a href="#" class="nav-link">Contact</a>
@@ -26,6 +26,17 @@
 
     <!-- Right navbar links -->
     <ul class="navbar-nav ml-auto">
+        @guest
+            <!-- Show login button -->
+            <a href="{{ route('login') }}" class="btn btn-primary loginButton">LOG IN</a>
+        @else
+            <!-- Show logout button -->
+            <form action="{{ route('logout') }}" method="get">
+{{--                @csrf--}}
+                <button type="submit" onclick="return confirm('Are you sure you want to logout?')" class="btn btn-primary logoutButton">LOG OUT</button>
+            </form>
+
+        @endguest
         <!-- Messages Dropdown Menu -->
         <li class="nav-item dropdown">
             <a class="nav-link" data-toggle="dropdown" href="#">
