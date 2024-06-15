@@ -48,9 +48,14 @@ class Constant
     const user_level_admin = 1;
     const user_level_client = 2;
     public static $user_level = [
-        self::user_level_superAdmin => 'superAdmin',
-        self::user_level_admin => 'admin',
-        self::user_level_client => 'client',
+        self::user_level_superAdmin => 'Super Admin',
+        self::user_level_admin => 'Admin',
+        self::user_level_client => 'Client',
+    ];
+    public static $user_level_color = [
+        self::user_level_superAdmin => '#dc3545',
+        self::user_level_admin => '#00ad00',
+        self::user_level_client  => '#6c757d',
     ];
     const COLOR_GREY = 1;
     const COLOR_WHITE = 2;
@@ -108,6 +113,8 @@ class Constant
         self::HOT_SALES => 'Hot Sales',
     ];
 
+
+//////$TAGS
     const CLOTHING = 0;
     const ACCESSORIES = 1;
     const HANDBAG = 2;
@@ -127,5 +134,27 @@ class Constant
         self::HAT => 'Hat',
         self::CALF => 'Calf',
     ];
+//////$COUPON_CONDITION
+    const BY_PERCENT = 1;
+    const BY_AMOUNT = 2;
+    public static $COUPON_CONDITION = [
+        self::BY_PERCENT => 'Phần trăm',
+        self::BY_AMOUNT => 'Số tiền',
+    ];
 
+//////$REVIEW_STATUS
+    const PENDING = 0;
+    const ALLOWED = 1;
+    const REFUSED = 2;
+    public static $REVIEW_STATUS= [
+        self::PENDING => 'PENDING',
+        self::ALLOWED => 'ALLOWED',
+        self::REFUSED => 'REFUSED',
+    ];
+
+    public static $REVIEW_STATUS_COLOR = [
+        self::PENDING => '#6c757d',
+        self::ALLOWED => '#00ad00',
+        self::REFUSED => '#dc3545',
+    ];
 }

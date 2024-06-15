@@ -120,7 +120,7 @@ class OrderController extends Controller
 
             return view('admin.order.index', compact('orders', 'sortBy', 'sortDirection', 'showDeleted', 'order_status', 'searchTerm', 'minPrice', 'maxPrice'));
         } catch (\Exception $exception) {
-            return redirect()->route('home')->with('error', 'Something went wrong!');
+            return back()->with('error', 'Something went wrong!');
         }
     }
 

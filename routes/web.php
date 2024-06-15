@@ -4,11 +4,14 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\CouponController;
 use App\Http\Controllers\Front\AccountController;
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ProductCommentController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use \App\Http\Controllers\Front\ShopController;
 use \App\Http\Controllers\Front\CartController;
@@ -95,50 +98,39 @@ Route::middleware(['auth', 'level'])->prefix('admin')->group(function () {
     Route::prefix('categories')->group(function () {
         Route::get('/search', [CategoryController::class, 'search'])
             ->name('categories.search');
-        Route::get('/delete{id}', [CategoryController::class, 'delete'])
+        Route::post('/restore/{id}', [CategoryController::class, 'restore'])
+            ->name('categories.restore');
+        Route::post('/delete/{id}', [CategoryController::class, 'delete'])
             ->name('categories.delete');
-        Route::put('/update{id}', [CategoryController::class, 'update'])
+        Route::post('/update/{category}', [CategoryController::class, 'update'])
             ->name('categories.update');
-        Route::get('/edit{id}', [CategoryController::class, 'edit'])
+        Route::get('/edit/{category}', [CategoryController::class, 'edit'])
             ->name('categories.edit');
         Route::post('/store', [CategoryController::class, 'store'])
             ->name('categories.store');
         Route::get('/create', [CategoryController::class, 'create'])
             ->name('categories.create');
-        Route::put('/restore', [CategoryController::class, 'restore'])
-            ->name('categories.restore');
+
         Route::get('/', [CategoryController::class, 'index'])
             ->name('categories');
     });
     Route::prefix('brands')->group(function () {
-        Route::get('/search', [BrandController::class, 'search'])
-            ->name('brands.search');
-        Route::put('/restore', [BrandController::class, 'restore'])
+        Route::post('/restore/{id}', [BrandController::class, 'restore'])
             ->name('brands.restore');
-        Route::get('/delete{id}', [BrandController::class, 'delete'])
+        Route::post('/delete/{id}', [BrandController::class, 'delete'])
             ->name('brands.delete');
-        Route::put('/update{id}', [BrandController::class, 'update'])
+        Route::post('/update/{brand}', [BrandController::class, 'update'])
             ->name('brands.update');
-        Route::get('/edit{id}', [BrandController::class, 'edit'])
+        Route::get('/edit/{brand}', [BrandController::class, 'edit'])
             ->name('brands.edit');
         Route::post('/store', [BrandController::class, 'store'])
             ->name('brands.store');
-        Route::get('/create', [BrandController::class, 'create'])
-            ->name('brands.create');
         Route::get('/', [BrandController::class, 'index'])
             ->name('brands');
     });
 
 
     Route::prefix('products')->group(function () {
-        Route::get('/search', [ProductController::class, 'search'])
-            ->name('products.search');
-
-
-//        Route::get('/fetch-quantity', [ProductController::class, 'fetchQuantity'])
-//            ->name('products.fetch-quantity');
-
-
         Route::post('/emptyTempFolder', [ProductController::class, 'emptyTempFolder'])
             ->name('products.emptyTempFolder');
         Route::post('/update/{id}', [ProductController::class, 'update'])
@@ -160,9 +152,9 @@ Route::middleware(['auth', 'level'])->prefix('admin')->group(function () {
         Route::get('/productDetails/{product}', [ProductController::class, 'productDetails'])
             ->name('products.productDetails');
 
-        Route::put('/restore', [ProductController::class, 'restore'])
+        Route::post('/restore/{id}', [ProductController::class, 'restore'])
             ->name('products.restore');
-        Route::get('/delete{id}', [ProductController::class, 'delete'])
+        Route::post('/delete/{id}', [ProductController::class, 'delete'])
             ->name('products.delete');
         Route::post('/store', [ProductController::class, 'store'])
             ->name('products.store');
@@ -229,20 +221,49 @@ Route::middleware(['auth', 'level'])->prefix('admin')->group(function () {
 
     });
 
-    Route::prefix('reviews')->group(function () {
-        Route::get('/search', [ReviewController::class, 'search'])
-            ->name('reviews.search');// route name luôn phải ở dạng reviews.abcxyz để search box hướng url về phần trước dầu. tức reviews và chấm thêm search
-        Route::put('/restore', [ReviewController::class, 'restore'])
-            ->name('reviews.restore');
-        Route::get('/delete{id}', [ReviewController::class, 'delete'])
-            ->name('reviews.delete');
-        Route::post('/submitReviewResponse', [ReviewController::class, 'submitReviewResponse'])
-            ->name('reviews.submitReviewResponse');
-        Route::get('/getSubmitReviewResponse', [ReviewController::class, 'getSubmitReviewResponse'])
-            ->name('reviews.getSubmitReviewResponse');
-        Route::put('/updateReviewStatus', [ReviewController::class, 'updateReviewStatus'])
-            ->name('reviews.updateReviewStatus');
-        Route::get('/', [ReviewController::class, 'index'])
-            ->name('reviews');
+    Route::prefix('productComments')->group(function () {
+        Route::post('/restore/{id}', [ProductCommentController::class, 'restore'])
+            ->name('productComments.restore');
+        Route::post('/delete/{id}', [ProductCommentController::class, 'delete'])
+            ->name('productComments.delete');
+        Route::post('/updateProductCommentStatus/{productComment}', [ProductCommentController::class, 'updateProductCommentStatus'])
+            ->name('productComments.updateProductCommentStatus');
+        Route::post('/submitShopResponse/{productComment}', [ProductCommentController::class, 'submitShopResponse'])
+            ->name('productComments.submitShopResponse');
+        Route::get('/getShopResponse/{productComment}', [ProductCommentController::class, 'getShopResponse'])
+            ->name('productComments.getShopResponse');
+        Route::get('/', [ProductCommentController::class, 'index'])
+            ->name('productComments');
+    });
+
+    Route::prefix('coupons')->group(function () {
+        Route::post('/restore/{id}', [CouponController::class, 'restore'])
+            ->name('coupons.restore');
+        Route::post('/delete/{id}', [CouponController::class, 'delete'])
+            ->name('coupons.delete');
+        Route::post('/update/{coupon}', [CouponController::class, 'update'])
+            ->name('coupons.update');
+        Route::get('/edit/{coupon}', [CouponController::class, 'edit'])
+            ->name('coupons.edit');
+        Route::post('/store', [CouponController::class, 'store'])
+            ->name('coupons.store');
+        Route::get('/', [CouponController::class, 'index'])
+            ->name('coupons');
+    });
+
+    Route::prefix('users')->group(function () {
+        Route::post('/restore/{id}', [UserController::class, 'restore'])
+            ->name('users.restore');
+        Route::post('/delete/{id}', [UserController::class, 'delete'])
+            ->name('users.delete');
+        Route::post('/updateProductCommentStatus/{productComment}', [UserController::class, 'updateProductCommentStatus'])
+            ->name('users.updateProductCommentStatus');
+        Route::post('/submitShopResponse/{productComment}', [UserController::class, 'submitShopResponse'])
+            ->name('users.submitShopResponse');
+        Route::get('/getShopResponse/{productComment}', [UserController::class, 'getShopResponse'])
+            ->name('users.getShopResponse');
+
+        Route::get('/', [UserController::class, 'index'])
+            ->name('users');
     });
 });

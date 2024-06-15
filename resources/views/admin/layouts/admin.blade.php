@@ -37,6 +37,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
         .loginButton, .logoutButton {
             /*padding: 2px;*/
         }
+        .nav-sidebar i {
+            width: 20px;
+            text-align: center;
+        }
         /*html,.wrapper,.main-header {*/
         /*    width: 100vw ; !* This will make the table width equal to the maximum screen width *!*/
         /*    overflow-x: auto; !* This will show a horizontal scrollbar when the table width exceeds the screen width *!*/

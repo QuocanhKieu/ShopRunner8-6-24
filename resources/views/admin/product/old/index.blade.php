@@ -45,10 +45,6 @@
             display: inline-block;
             margin: 0 10px 10px 0;
         }
-        input[type='search'] {
-            height: auto !important;
-            font-size: 1.175rem !important;
-        }
     </style>
 @endsection
 @section('content')
@@ -62,27 +58,10 @@
     //        $PAYMENT_STATUSES = App\Constants\OrderConstants::PAYMENTSTATUSES;
             $STATUS_COLORS = Constant::STATUSCOLORS;
         @endphp
-{{--        <form class="form-inline ml-3" method="GET" action="{{ route('products') }}">--}}
-{{--            <input type="hidden" name="sort_by" value="{{ request('sort_by', $sortBy) }}">--}}
-{{--            <input type="hidden" name="sort_direction" value="{{ request('sort_direction', $sortDirection) }}">--}}
-{{--            <input type="hidden" name="show_deleted" value="{{ request('show_deleted', $showDeleted) }}">--}}
-{{--            <input type="hidden" name="page" value="{{ $products->currentPage() }}">--}}
-{{--            <div class="input-group input-group-sm">--}}
-{{--                <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search"--}}
-{{--                       value="{{ request('search_term', $searchTerm) }}" name="search_term">--}}
-{{--                <div class="input-group-append">--}}
-{{--                    <button class="btn btn-navbar" type="submit">--}}
-{{--                        <i class="fas fa-search"></i>--}}
-{{--                    </button>--}}
-{{--                </div>--}}
-{{--            </div>--}}
-{{--        </form>--}}
         <div class="content">
             <form method="GET" action="{{ route('products') }}" class="p-3">
                 <input type="hidden" name="sort_by" value="{{ request('sort_by', $sortBy) }}">
                 <input type="hidden" name="sort_direction" value="{{ request('sort_direction', $sortDirection) }}">
-                {{--                <input type="hidden" name="page" value="{{ $orders->currentPage() }}">--}}
-
                 <div class="form-row">
                     <div class="form-group col-md-2">
                         <div class="form-check">
@@ -92,17 +71,6 @@
                             </label>
                         </div>
                     </div>
-                    {{--                <div class="form-group col-md-2">--}}
-                    {{--                    <label for="order_status">Order status</label>--}}
-                    {{--                    <select class="form-control" name="order_status" id="order_status">--}}
-                    {{--                        <option value="">Tất cả</option>--}}
-                    {{--                        @foreach($ORDERS_STATUSES as $key => $status)--}}
-                    {{--                            <option value="{{$key}}" {{ $key == $order_status ? 'selected' : '' }}>--}}
-                    {{--                                {{$status}}--}}
-                    {{--                            </option>--}}
-                    {{--                        @endforeach--}}
-                    {{--                    </select>--}}
-                    {{--                </div>--}}
                     <div class="form-group col-md-2">
                         <label for="min_price">Min Price</label>
                         <input type="number" class="form-control" id="min_price" name="min_price" value="{{ request('min_price',$minPrice) }}" placeholder="0" min="0">
@@ -124,20 +92,6 @@
                     </div>
                 </div>
             </form>
-{{--            <form method="GET" action="{{ route('products') }}" style="padding-left: 13px;">--}}
-{{--                <input type="hidden" name="sort_by" value="{{ request('sort_by', $sortBy) }}">--}}
-{{--                <input type="hidden" name="sort_direction" value="{{ request('sort_direction', $sortDirection) }}">--}}
-{{--                <input type="hidden" name="search_term" value="{{ request('search_term', $searchTerm) }}">--}}
-{{--                <input type="hidden" name="page" value="{{ $products->currentPage() }}">--}}
-{{--                <div class="form-check">--}}
-{{--                    <input class="form-check-input" type="checkbox" name="show_deleted" id="show_deleted"--}}
-{{--                           value="yes" {{ $showDeleted === 'yes' ? 'checked' : '' }}>--}}
-{{--                    <label class="form-check-label" for="show_deleted">--}}
-{{--                        Hiển thị Sản Phẩm đã ẩn--}}
-{{--                    </label>--}}
-{{--                </div>--}}
-{{--                <button type="submit" class="btn btn-primary">Lọc</button>--}}
-{{--            </form>--}}
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-md-12" style="display: flex; justify-content: end;">
@@ -148,7 +102,6 @@
 
                     </div>
                     <div class="div col-md-12">
-
                         <table class="table">
                             <thead>
                             <tr>
@@ -273,22 +226,17 @@
                                             </div>
                                             {{--                                                    ....--}}
                                         </div>
-                                        <span id="delRes_{{$product->id}}">
                                         @if($product->deleted_at)
                                             <button type="button" class="btn btn-success"
-                                                    onclick="restoreProduct(this, {{ $product->id }})" title="Restore"
-                                                    data-url="{{ route('products.restore', $product->id) }}"
-                                                    id="restoreBtn_{{ $product->id }}">
-                                                <i class="fas fa-undo"></i>
+                                                    onclick="restoreProduct(this, {{ $product->id}})" title="Restore"
+                                                    id="restoreBtn"><i class="fas fa-undo"></i>
                                             </button>
                                         @else
-                                            <a title="Delete" href="#" class="btn btn-danger delete-product"
-                                               onclick="deleteProduct(this, {{ $product->id }})"
+                                            <a title="Delete" href="#" class="btn btn-danger delete-product" style="  "
                                                data-url="{{ route('products.delete', $product->id) }}">
                                                 <i class="fas fa-trash"></i>
                                             </a>
                                         @endif
-                                        </span>
                                     </td>
                                 </tr>
                             @endforeach
@@ -676,6 +624,73 @@
                     });
                 });
             </script>
+{{--        delete and restore--}}
+            <script>
+                $(document).ready(function() {
+                    $(document).on('click', '.delete-product', function(e) {
+                        e.preventDefault(); // Prevent the default action of the link
+
+                        var $this = $(this); // Capture the clicked element
+                        var currentUrl = new URL(window.location.href);
+                        var queryParams = currentUrl.search; // Get the query parameters
+
+                        alertify.confirm(
+                            'Confirm Message',
+                            'Are you sure you want to Soft-Delete this Product?',
+                            function () {
+                                var deleteUrl = $this.data('url') + queryParams;
+                                window.location.href = deleteUrl; // Redirect with query parameters
+                            },
+                            function () {
+                                alertify.error('Cancel'); // Handle cancel action
+                            }
+                        );
+                    });
+                });
+                function restoreProduct(button, product_id) {
+                    // Confirm before sending the AJAX request
+                    alertify.confirm('Confirm Message', 'Are you sure you want to restore this product?',
+                        function() {
+                            // Send an AJAX request to restore the order
+                            var url = '{{ route('products.restore') }}';
+                            $.ajax({
+                                url: url,
+                                type: "put",
+                                data: {
+                                    product_id: product_id
+                                },
+                                headers: {
+                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                },
+                                success: function (response) {
+                                    if (response.success) {
+                                        var deleteLink = $('<a>', {
+                                            title: 'Delete',
+                                            href: 'javascript:void(0);',
+                                            class: 'btn btn-danger delete-product',
+                                            'data-url': "{{ route('products.delete', ':product_id') }}".replace(':product_id', product_id),
+                                            html: '<i class="fas fa-trash"></i>'
+                                        });
+
+                                        $(button).replaceWith(deleteLink);
+                                        alertify.success(response.message);
+
+                                    } else {
+                                        alertify.error(response.message);
+                                    }
+                                },
+                                error: function (xhr, status, error) {
+                                    alertify.error('Restore Product thất bại'); // Show generic error message
+                                    console.error(xhr.responseText); // Log the error for debugging
+                                }
+                            });
+                        },
+                        function() {
+                            alertify.error('Cancel');
+                        }
+                    );
+                }
+            </script>
 {{--            each edit on text cell--}}
             <script>
                 $(document).ready(function () {
@@ -776,7 +791,7 @@
 
                                     var product = response.thisProduct;
                                     var images = response.images;
-                                    // alertify.success((''+product.brand_id));
+                                    alertify.success((''+product.brand_id));
                                     // Populate form fields
                                     $('#edit_productName').val(product.name);
                                     $('#edit_brand_id').val(product.brand_id);
@@ -939,51 +954,6 @@
                         }
                     });
                 }
-            </script>
-
-            <script>
-                function deleteProduct(button, productId) {
-                    const url = $(button).data('url');
-
-                    $.ajax({
-                        url: url,
-                        type: 'POST',
-                        headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-                        success: function (response) {
-                            if (response.success) {
-                                alertify.success(response.message);
-                                $('#delRes_' + productId).html(response.html);
-                            } else {
-                                alertify.error(response.message);
-                            }
-                        },
-                        error: function (xhr) {
-                            alertify.error('An error occurred while deleting the brand.');
-                        }
-                    });
-                }
-
-                function restoreProduct(button, productId) {
-                    const url = $(button).data('url');
-
-                    $.ajax({
-                        url: url,
-                        type: 'POST',
-                        headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-                        success: function (response) {
-                            if (response.success) {
-                                alertify.success(response.message);
-                                $('#delRes_' + productId).html(response.html);
-                            } else {
-                                alertify.error(response.message);
-                            }
-                        },
-                        error: function (xhr) {
-                            alertify.error('An error occurred while restoring the brand.');
-                        }
-                    });
-                }
-
             </script>
 @endsection
 

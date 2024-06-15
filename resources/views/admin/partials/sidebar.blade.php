@@ -51,15 +51,15 @@
 {{--                </li>--}}
                 <li class="nav-item">
                     <a href="{{route('categories')}}" class="nav-link">
-                        <i class="nav-icon fas fa-th"></i>
+                        <i class="fas fa-th-list"></i>
                         <p style="    white-space: nowrap;">
-                            Danh Mục Sản Phẩm
+                            Categories
                         </p>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a href="{{route('brands')}}" class="nav-link">
-                        <i class="nav-icon fas fa-th"></i>
+                        <i class="fas fa-flag"></i>
                         <p style="    white-space: nowrap;">
                              Brands
                         </p>
@@ -75,7 +75,7 @@
 {{--                </li>--}}
                 <li class="nav-item">
                     <a href="{{route('products')}}" class="nav-link">
-                        <i class="nav-icon fas fa-th"></i>
+                        <i class="fas fa-warehouse"></i>
                         <p style="    white-space: nowrap;">
                              Sản Phẩm
                         </p>
@@ -83,31 +83,31 @@
                 </li>
                 <li class="nav-item">
                     <a href="{{route('orders')}}" class="nav-link">
-                        <i class="nav-icon fas fa-th"></i>
+                        <i class="fas fa-cart-plus"></i>
                         <p style="    white-space: nowrap;">
                              Đơn Hàng
                         </p>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{route('reviews')}}" class="nav-link">
-                        <i class="nav-icon fas fa-th"></i>
+                    <a href="{{route('productComments')}}" class="nav-link">
+                        <i class="fas fa-star-half-alt"></i>
                         <p style="    white-space: nowrap;">
                              Đánh Giá
                         </p>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{route('products')}}" class="nav-link">
-                        <i class="nav-icon fas fa-th"></i>
+                    <a href="{{route('users')}}" class="nav-link">
+                        <i class="fas fa-users"></i>
                         <p style="    white-space: nowrap;">
                              Người Dùng
                         </p>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{route('products')}}" class="nav-link">
-                        <i class="nav-icon fas fa-th"></i>
+                    <a href="{{route('coupons')}}" class="nav-link">
+                        <i class="fas fa-receipt"></i>
                         <p style="    white-space: nowrap;">
                             Mã Giảm Giá
                         </p>

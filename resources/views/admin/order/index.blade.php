@@ -346,18 +346,18 @@
                                                     <!-- Add more actions as needed... -->
                                                 </div>
                                             </div>
-                                            @if($order->deleted_at)
-                                                <button type="button" class="btn btn-success"
-                                                        onclick="restoreOrder(this, {{ $order->id}})" title="Restore"
-                                                        id="restoreBtn"><i class="fas fa-undo"></i>
-                                                </button>
-                                            @else
-                                                <a title="Delete" href="#" class="btn btn-danger delete-order"
-                                                   style="  "
-                                                   data-url="{{ route('orders.delete', $order->id) }}">
-                                                    <i class="fas fa-trash"></i>
-                                                </a>
-                                            @endif
+{{--                                            @if($order->deleted_at)--}}
+{{--                                                <button type="button" class="btn btn-success"--}}
+{{--                                                        onclick="restoreOrder(this, {{ $order->id}})" title="Restore"--}}
+{{--                                                        id="restoreBtn"><i class="fas fa-undo"></i>--}}
+{{--                                                </button>--}}
+{{--                                            @else--}}
+{{--                                                <a title="Delete" href="#" class="btn btn-danger delete-order"--}}
+{{--                                                   style="  "--}}
+{{--                                                   data-url="{{ route('orders.delete', $order->id) }}">--}}
+{{--                                                    <i class="fas fa-trash"></i>--}}
+{{--                                                </a>--}}
+{{--                                            @endif--}}
                                             {{--                                            <a class="staffNote" title="Staff Note" href="javascript:void(0)" onclick="showStaffNote(this, {{$order->id}})" style="position: relative" id="staffNote_{{$order->id}}">--}}
                                             {{--                                                <i class="fas fa-user-edit"></i>--}}
                                             {{--                                                @if(trim($order->staff_note??''))--}}

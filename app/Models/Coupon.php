@@ -4,20 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Coupon extends Model
 {
-    public $timestamps = false;
-    protected $fillable = [
-       'coupon_time',
-        'coupon_condition',
-        'coupon_number',
-        'coupon_code',
-        'coupon_name',
+    use SoftDeletes;
+    protected $guarded = [
     ];
 
     protected $primaryKey = 'coupon_id';
-    protected $table = 'coupon';
-
+    protected $table = 'coupons';
 
 }

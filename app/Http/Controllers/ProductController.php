@@ -31,83 +31,89 @@ class ProductController extends Controller
 {
     public function index(Request $request)
     {
-        $sortBy = $request->get('sort_by', 'created_at'); // Default column to sort by
-        $sortDirection = $request->get('sort_direction', 'desc'); // Default sort direction
-        $showDeleted = $request->get('show_deleted', 'no'); // Default to not showing deleted
-        $searchTerm = $request->get('search_term', '');
-        $minPrice = $request->get('min_price', null);
-        $maxPrice = $request->get('max_price', null);
+        try
+            {
+                $sortBy = $request->get('sort_by', 'created_at'); // Default column to sort by
+                $sortDirection = $request->get('sort_direction', 'desc'); // Default sort direction
+                $showDeleted = $request->get('show_deleted', 'no'); // Default to not showing deleted
+                $searchTerm = $request->get('search_term', '');
+                $minPrice = $request->get('min_price', null);
+                $maxPrice = $request->get('max_price', null);
 
-        if (!in_array($sortDirection, ['asc', 'desc'])) {
-            $sortDirection = 'desc';
-        }
-        $query = Product::query();
-        // Fetch orders with or without trashed ones
-        if ($showDeleted === 'yes') {
-            $query = $query->withTrashed();
-        }
-        if ($searchTerm) {
-            $query->where(function ($query) use ($searchTerm) {
-                $query->where('id', 'like', "%$searchTerm%")
-                    ->orWhere('brand_id', 'like', "%$searchTerm%")
-                    ->orWhere('product_category_id', 'like', "%$searchTerm%")
-                    ->orWhere('name', 'like', "%$searchTerm%")
-                    ->orWhere('description', 'like', "%$searchTerm%")
-                    ->orWhere('content', 'like', "%$searchTerm%")
-                    ->orWhere('price', 'like', "%$searchTerm%")
-                    ->orWhere('qty', 'like', "%$searchTerm%")
-                    ->orWhere('discount', 'like', "%$searchTerm%")
-                    ->orWhere('weight', 'like', "%$searchTerm%")
-                    ->orWhere('sku', 'like', "%$searchTerm%")
-                    ->orWhere('featured', 'like', "%$searchTerm%")
-                    ->orWhere('tag', 'like', "%$searchTerm%")
-                    ->orWhere('notes', 'like', "%$searchTerm%")
-                    ->orWhere('additional_info', 'like', "%$searchTerm%")
-                    ->orWhere('deleted_at', 'like', "%$searchTerm%");
-            })
-                ->orWhereHas('brand', function ($query) use ($searchTerm) {
+                if (!in_array($sortDirection, ['asc', 'desc'])) {
+                    $sortDirection = 'desc';
+                }
+                $query = Product::query();
+                // Fetch orders with or without trashed ones
+                if ($showDeleted === 'yes') {
+                    $query = $query->withTrashed();
+                }
+                if ($searchTerm) {
                     $query->where(function ($query) use ($searchTerm) {
-                        $query->where('name', 'like', "%$searchTerm%");
+                        $query->where('id', 'like', "%$searchTerm%")
+                            ->orWhere('brand_id', 'like', "%$searchTerm%")
+                            ->orWhere('product_category_id', 'like', "%$searchTerm%")
+                            ->orWhere('name', 'like', "%$searchTerm%")
+                            ->orWhere('description', 'like', "%$searchTerm%")
+                            ->orWhere('content', 'like', "%$searchTerm%")
+                            ->orWhere('price', 'like', "%$searchTerm%")
+                            ->orWhere('qty', 'like', "%$searchTerm%")
+                            ->orWhere('discount', 'like', "%$searchTerm%")
+                            ->orWhere('weight', 'like', "%$searchTerm%")
+                            ->orWhere('sku', 'like', "%$searchTerm%")
+                            ->orWhere('featured', 'like', "%$searchTerm%")
+                            ->orWhere('tag', 'like', "%$searchTerm%")
+                            ->orWhere('notes', 'like', "%$searchTerm%")
+                            ->orWhere('additional_info', 'like', "%$searchTerm%")
+                            ->orWhere('deleted_at', 'like', "%$searchTerm%");
+                    })
+                        ->orWhereHas('brand', function ($query) use ($searchTerm) {
+                            $query->where(function ($query) use ($searchTerm) {
+                                $query->where('name', 'like', "%$searchTerm%");
 //                            ->orWhere('qty', 'like', "%$searchTerm%"); // Added column
-                    });
-                })
-                ->orWhereHas('productCategory', function ($query) use ($searchTerm) {
-                    $query->where(function ($query) use ($searchTerm) {
-                        $query->where('name', 'like', "%$searchTerm%");
+                            });
+                        })
+                        ->orWhereHas('productCategory', function ($query) use ($searchTerm) {
+                            $query->where(function ($query) use ($searchTerm) {
+                                $query->where('name', 'like', "%$searchTerm%");
 //                        ->orWhere('phone_number', 'like', "%$searchTerm%"); // Added column
+                            });
+                        });
+                }
+                if ($sortBy === 'brand_id') {
+                    $query->join('brands', 'products.brand_id', '=', 'brands.id')
+                        ->orderBy('brands.name', $sortDirection)
+                        ->select('products.*');
+                } elseif ($sortBy === 'product_category_id') {
+                    $query->join('product_categories', 'products.product_category_id', '=', 'product_categories.id')
+                        ->orderBy('product_categories.name', $sortDirection)
+                        ->select('products.*');
+                } else {
+                    $query->orderBy($sortBy, $sortDirection);
+                }
+                if ($minPrice !== null) {
+                    $query->where(function ($query) use ($minPrice) {
+                        $query->where('price', '>=', $minPrice);
                     });
-                });
+                }
+
+                if ($maxPrice !== null) {
+                    $query->where(function ($query) use ($maxPrice) {
+                        $query->where('price', '<=', $maxPrice);
+                    });
+                }
+
+                $products = $query->paginate(5);
+
+
+                $brands = Brand::all();
+                $categories = ProductCategory::all();
+
+                return view('admin.product.index', compact('products', 'sortBy', 'sortDirection', 'showDeleted', 'searchTerm', 'categories', 'brands', 'minPrice', 'maxPrice'));
+            }catch (\Exception $exception) {
+            session()->flash('error', 'Something went wrong, please try again!');
+            return back();
         }
-        if ($sortBy === 'brand_id') {
-            $query->join('brands', 'products.brand_id', '=', 'brands.id')
-                ->orderBy('brands.name', $sortDirection)
-                ->select('products.*');
-        } elseif ($sortBy === 'product_category_id') {
-            $query->join('product_categories', 'products.product_category_id', '=', 'product_categories.id')
-                ->orderBy('product_categories.name', $sortDirection)
-                ->select('products.*');
-        } else {
-            $query->orderBy($sortBy, $sortDirection);
-        }
-        if ($minPrice !== null) {
-            $query->where(function ($query) use ($minPrice) {
-                $query->where('price', '>=', $minPrice);
-            });
-        }
-
-        if ($maxPrice !== null) {
-            $query->where(function ($query) use ($maxPrice) {
-                $query->where('price', '<=', $maxPrice);
-            });
-        }
-
-        $products = $query->paginate(5);
-
-
-        $brands = Brand::all();
-        $categories = ProductCategory::all();
-
-        return view('admin.product.index', compact('products', 'sortBy', 'sortDirection', 'showDeleted', 'searchTerm', 'categories', 'brands', 'minPrice', 'maxPrice'));
     }
 
     public function getText(Request $request)
@@ -343,76 +349,70 @@ class ProductController extends Controller
 
     }
 
-    public function delete(Request $request, $id)
+    public function delete($id)
     {
-//        $product = Product::findOrFail($id);
-//        $product->delete();
-//        return redirect(route('products'));
-
-        $product = Product::find($id);
+        $product = Product::withTrashed()->find($id);
         if ($product) {
-            $product->delete(); // or $product->softDelete() depending on your soft delete implementation
+            $product->delete();
+//            session()->flash('success', 'Product deleted successfully');
+            $html = view('admin.partials._product_buttons', ['product' => $product])->render();
+            return response()->json(['success' => true, 'message' => 'Product deleted successfully', 'html' => $html]);
+        } else {
+            session()->flash('error', 'Product not found.');
+            return response()->json(['success' => false, 'message' => 'Product not found.']);
         }
-
-        // Get the query parameters from the request
-        $queryParams = $request->query();
-        session()->flash('success', 'Product deleted successfully');
-        // Redirect to the orders route with the same query parameters
-        return Redirect::route('products', $queryParams);
     }
 
-    public function restore(Request $request)
+    public function restore($id)
     {
-        //get data passed from Ajax
-        $id = $request->input('product_id');
-        // Fetch categories based on showDeleted value
-        $softDeletedProduct = Product::withTrashed()->find($id);
-//        dd($softDeleted);
-        // Check if the category exists
-        if ($softDeletedProduct) {
-
-            $softDeletedProduct->restore();
-
-            // Category found, you can perform further actions here
-            return response()->json(['success' => true, 'message' => 'Restore thành công.']);
+        $product = Product::withTrashed()->find($id);
+        if ($product) {
+            $product->restore();
+//            session()->flash('success', 'Product restored successfully');
+            $html = view('admin.partials._product_buttons', ['product' => $product])->render();
+            return response()->json(['success' => true, 'message' => 'Product restored successfully', 'html' => $html]);
         } else {
-            // Category not found
-            return response()->json(['success' => false, 'message' => 'restore thất bại.']);
-
+            session()->flash('error', 'Product not found.');
+            return response()->json(['success' => false, 'message' => 'Product not found.']);
         }
     }
 
 //    productDetail
     public function productDetails(Request $request, Product $product)
     {
-        $productId = $product->id;
+        try {
+            $productId = $product->id;
 
-        $sortBy = $request->get('sort_by', 'created_at'); // Default column to sort by
-        $sortDirection = $request->get('sort_direction', 'desc'); // Default sort direction
+            $sortBy = $request->get('sort_by', 'created_at'); // Default column to sort by
+            $sortDirection = $request->get('sort_direction', 'desc'); // Default sort direction
 //        $showDeleted = $request->get('show_deleted', 'no'); // Default to not showing deleted
-        $searchTerm = $request->get('search_term', '');
+            $searchTerm = $request->get('search_term', '');
 
-        if (!in_array($sortDirection, ['asc', 'desc'])) {
-            $sortDirection = 'desc';
+            if (!in_array($sortDirection, ['asc', 'desc'])) {
+                $sortDirection = 'desc';
+            }
+            $query = ProductDetail::where('product_id', $productId);
+
+            if ($searchTerm) {
+                $query->where(function ($query) use ($searchTerm) {
+                    $query->where('id', 'like', "%$searchTerm%")
+                        ->orWhere('color', 'like', "%$searchTerm%")
+                        ->orWhere('size', 'like', "%$searchTerm%")
+                        ->orWhere('qty', 'like', "%$searchTerm%");
+                });
+            }
+
+            if ($sortBy) {
+                $query->orderBy($sortBy, $sortDirection);
+            }
+
+            $productDetails = $query->paginate(10);
+
+            return view('admin.product.productDetail', compact('product', 'sortBy', 'sortDirection', 'searchTerm', 'productDetails'));
+        } catch (\Exception $exception) {
+            session()->flash('error', 'Something went wrong, please try again!');
+            return back();
         }
-        $query = ProductDetail::where('product_id', $productId);
-
-        if ($searchTerm) {
-            $query->where(function ($query) use ($searchTerm) {
-                $query->where('id', 'like', "%$searchTerm%")
-                    ->orWhere('color', 'like', "%$searchTerm%")
-                    ->orWhere('size', 'like', "%$searchTerm%")
-                    ->orWhere('qty', 'like', "%$searchTerm%");
-            });
-        }
-
-        if ($sortBy) {
-            $query->orderBy($sortBy, $sortDirection);
-        }
-
-        $productDetails = $query->paginate(10);
-
-        return view('admin.product.productDetail', compact('product', 'sortBy', 'sortDirection', 'searchTerm','productDetails'));
     }
     public function storeItem(Request $request, Product $product){
 //        dd($product->name);
