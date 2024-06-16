@@ -1,6 +1,8 @@
+@php use App\Utilities\Constant; @endphp
+
 @extends('admin.layouts.admin')
 @section('title')
-    <title>Danh Sách Brands</title>
+    <title>Danh Sách Permission</title>
 @endsection
 @section('this-css')
 
@@ -48,7 +50,7 @@
         .placeholder {
             min-height: 38px;
         }
-        .nav-item#brand {
+        .nav-item#permission {
             background-color: rgba(255, 255, 255, .1);
             color: #fff;
         }
@@ -58,13 +60,13 @@
 
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
-        @include('admin.partials.content-header',['name' => '', 'key' => 'Danh Sách Brands','url' => ''])
+        @include('admin.partials.content-header',['name' => '', 'key' => 'Danh Sách Permission','url' => ''])
         <hr style="margin-block: 5px;">
         <!-- /.content-header -->
 
         <!-- Main content -->
         <div class="content">
-            <form method="GET" action="{{ route('brands') }}" class="p-3">
+            <form method="GET" action="{{ route('permissions') }}" class="p-3">
                 <input type="hidden" name="sort_by" value="{{ request('sort_by', $sortBy) }}">
                 <input type="hidden" name="sort_direction" value="{{ request('sort_direction', $sortDirection) }}">
                 <div class="form-row">
@@ -73,7 +75,7 @@
                             <input class="form-check-input" type="checkbox" name="show_deleted" id="show_deleted"
                                    value="yes" {{ $showDeleted === 'yes' ? 'checked' : '' }}>
                             <label class="form-check-label" for="show_deleted">
-                                Display hidden Brands?
+                                Display hidden Permissions?
                             </label>
                         </div>
                     </div>
@@ -95,9 +97,9 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-md-12" style="display: flex; justify-content: end;">
-                        <button type="button" class="btn btn-primary createBrand" data-bs-toggle="modal"
-                                data-bs-target="#createBrandModal">
-                            Create new Brand
+                        <button type="button" class="btn btn-primary createPermission" data-bs-toggle="modal"
+                                data-bs-target="#createPermissionModal">
+                            Create new Permission
                         </button>
                     </div>
                     <div class="div col-md-12">
@@ -106,24 +108,24 @@
                             <tr>
                                 @php
                                     $columns = [
-                                     'id' => ['name' => 'ID', 'sortable' => true],
+                                     'id' => ['name' => 'id', 'sortable' => true],
                                      'name' => ['name' => 'name', 'sortable' => true],
+                                     'group' => ['name' => 'group', 'sortable' => true],
+                                     'description' => ['name' => 'description', 'sortable' => true],
                                      'created_at' => ['name' => 'created_at', 'sortable' => true],
                                      'updated_at' => ['name' => 'updated_at', 'sortable' => true],
-
                                  ];
                                 @endphp
 
                                 @foreach($columns as $column => $details)
                                     <th>
                                         @if($details['sortable'])
-                                            <a href="{{ route('brands', [
+                                            <a href="{{ route('permissions', [
                                                         'sort_by' => $column,
                                                         'sort_direction' => $sortBy === $column && $sortDirection === 'asc' ? 'desc' : 'asc',
                                                         'search_term' => request('search_term', $searchTerm),
                                                         'show_deleted' => request('show_deleted', $showDeleted),
-                                                        'page' => $brands->currentPage(), // Preserve current page
-
+                                                        'page' => $permissions->currentPage(), // Preserve current page
                                                     ]) }}">
                                                 {{ $details['name'] }}
                                                 @if($sortBy === $column)
@@ -139,31 +141,33 @@
                             </tr>
                             </thead>
                             <tbody>
-                            @foreach ($brands as $brand)
+                            @foreach ($permissions as $permission)
                                 <tr>
-                                    <th scope="row">{{ $brand->id }}</th>
-                                    <td>{{ $brand->name }}</td>
-                                    <td>{{ $brand->created_at }}</td>
-                                    <td>{{ $brand->updated_at }}</td>
+                                    <th scope="row">{{ $permission->id }}</th>
+                                    <td>{{ $permission->name??'' }}</td>
+                                    <td>{{ $permission->group??'' }}</td>
+                                    <td>{{ $permission->description??'' }}</td>
+                                    <td>{{ $permission->created_at }}</td>
+                                    <td>{{ $permission->updated_at }}</td>
                                     <td>
                                         <button style="margin-left: 15px !important;" type="button"
-                                                class="btn btn-primary edit-brand" data-bs-toggle="modal"
-                                                data-bs-target="#editBrandModal" data-brandid="{{ $brand->id }}">
-                                            <i class="fas fa-edit"></i> Edit Brand
+                                                class="btn btn-primary edit-permission" data-bs-toggle="modal"
+                                                data-bs-target="#editPermissionModal" data-id="{{ $permission->id }}">
+                                            <i class="fas fa-edit"></i> Edit Permission
                                         </button>
-                                        <span id="delRes_{{$brand->id}}">
-                                             @if($brand->deleted_at)
+                                        <span id="delRes_{{$permission->id}}">
+                                             @if($permission->deleted_at)
                                                 <button type="button" class="btn btn-success"
-                                                        onclick="restoreBrand(this, {{ $brand->id }})" title="Restore"
-                                                        data-url="{{ route('brands.restore', $brand->id) }}"
-                                                        id="restoreBtn_{{ $brand->id }}">
-                                                        <i class="fas fa-undo"></i>
+                                                        onclick="restorePermission(this, {{ $permission->id }})" title="Restore"
+                                                        data-url="{{ route('permissions.restore', $permission->id) }}"
+                                                        id="restoreBtn_{{ $permission->id }}">
+                                                        <i class="fas fa-eye"></i>
                                                 </button>
                                             @else
-                                                <a title="Delete" href="javascript:void(0);" class="btn btn-danger delete-brand"
-                                                   onclick="deleteBrand(this, {{ $brand->id }})"
-                                                   data-url="{{ route('brands.delete', $brand->id) }}">
-                                                    <i class="fas fa-trash"></i>
+                                                <a title="Hide" href="javascript:void(0);" class="btn btn-danger delete-permission"
+                                                   onclick="deletePermission(this, {{ $permission->id }})"
+                                                   data-url="{{ route('permissions.delete', $permission->id) }}">
+                                                    <i class="fas fa-eye-slash"></i>
                                                 </a>
                                             @endif
                                         </span>
@@ -174,7 +178,7 @@
                             </tbody>
                         </table>
                         <div class="col-md-12">
-                            {{ $brands->appends([
+                            {{ $permissions->appends([
                                     'sort_by' =>  request('sort_by', $sortBy),
                                     'sort_direction' =>  request('sort_direction', $sortDirection),
                                     'search_term' => request('search_term', $searchTerm),
@@ -188,26 +192,48 @@
         </div>
         <!-- /.content -->
     </div>
-    <div class="modal fade" id="createBrandModal" tabindex="-1" role="dialog"
-         aria-labelledby="createBrandModalLabel" aria-hidden="true">
+    <div class="modal fade" id="createPermissionModal" tabindex="-1" role="dialog"
+         aria-labelledby="createPermissionModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="createBrandModalLabel">Create New Brand</h5>
+                    <h5 class="modal-title" id="createPermissionModalLabel">Create New Permission</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                     </button>
                 </div>
-                <form id="createBrandModalForm" enctype="multipart/form-data">
+                <form id="createPermissionModalForm" enctype="multipart/form-data">
                     <div class="modal-body">
                         <div class="form-group">
-                            <label for="name">Brand Name</label>
+                            <label for="name">Permission Name</label>
                             <input type="text" class="form-control" id="name" name="name" required>
                             <div class="invalid-feedback"></div>
                         </div>
+
+                        <div class="form-group">
+                            <label for="group">Permission Group</label>
+                            <select class="form-control" id="group" name="group"
+                                    required>
+                                @foreach(Constant::$PERMISSION_CONTROLLERS as $controller)
+                                    <option value="{{ $controller }}">{{ $controller }}</option>
+                                @endforeach
+                            </select>
+                            <div class="invalid-feedback"></div>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="form-group">
+                            <label for="description">Description</label>
+                            <textarea class="form-control" id="description" name="description"></textarea>
+                            <div class="invalid-feedback"></div>
+                        </div>
+
                     </div>
+
+
+
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Create Brand</button>
+                        <button type="submit" class="btn btn-primary">Create Permission</button>
                     </div>
                 </form>
             </div>
@@ -215,21 +241,41 @@
     </div>
 
     <!-- Edit Product Modal -->
-    <div class="modal fade" id="editBrandModal" tabindex="-1"
-         aria-labelledby="editBrandModal" aria-hidden="true">
+    <div class="modal fade" id="editPermissionModal" tabindex="-1"
+         aria-labelledby="editPermissionModal" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="editBrandLabel">Edit Brand</h5>
+                    <h5 class="modal-title" id="editPermissionLabel">Edit Permission</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                     </button>
                 </div>
-                <form id="editBrandForm" enctype="multipart/form-data" class="placeholder-glow">
+                <form id="editPermissionForm" enctype="multipart/form-data" class="placeholder-glow">
                     <div class="modal-body placeholder-glow">
                         <div class="modal-body">
                             <div class="form-group">
-                                <label for="edit_name">Brand Name</label>
+                                <label for="edit_name">Permission Name</label>
                                 <input type="text" class="form-control" id="edit_name" name="name" required>
+                                <div class="invalid-feedback"></div>
+                                <span class="placeholder col-12"></span>
+                            </div>
+                            <div class="form-group">
+                                <label for="edit_group">Permission Group</label>
+                                <select class="form-control" id="edit_group" name="group"
+                                        required>
+                                    @foreach(Constant::$PERMISSION_CONTROLLERS as $controller)
+                                        <option value="{{ $controller }}">{{ $controller }}</option>
+                                    @endforeach
+                                </select>
+                                <div class="invalid-feedback"></div>
+                                <span class="placeholder col-12"></span>
+
+                            </div>
+
+                            <!-- Description -->
+                            <div class="form-group">
+                                <label for="edit_description">Description</label>
+                                <textarea class="form-control" id="edit_description" name="description"></textarea>
                                 <div class="invalid-feedback"></div>
                                 <span class="placeholder col-12"></span>
                             </div>
@@ -237,7 +283,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Update Brand</button>
+                        <button type="submit" class="btn btn-primary">Update Permission</button>
                     </div>
                 </form>
             </div>
@@ -249,55 +295,9 @@
     <script src="{{asset('admins/js/bs513/bootstrap.bundle.js')}}"></script>
 
     <script>
-        function deleteBrand(button, brandId) {
-            const url = $(button).data('url');
-
-            $.ajax({
-                url: url,
-                type: 'POST',
-                headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-                success: function (response) {
-                    if (response.success) {
-                        alertify.success(response.message);
-                        $('#delRes_' + brandId).html(response.html);
-                    } else {
-                        alertify.error(response.message);
-                    }
-                },
-                error: function (xhr) {
-                    alertify.error('An error occurred while deleting the brand.');
-                }
-            });
-        }
-
-        function restoreBrand(button, brandId) {
-            const url = $(button).data('url');
-
-            $.ajax({
-                url: url,
-                type: 'POST',
-                headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-                success: function (response) {
-                    if (response.success) {
-                        alertify.success(response.message);
-                        $('#delRes_' + brandId).html(response.html);
-                    } else {
-                        alertify.error(response.message);
-                    }
-                },
-                error: function (xhr) {
-                    alertify.error('An error occurred while restoring the brand.');
-                }
-            });
-        }
-
-    </script>
-
-
-    <script>
-        $(document).on('click', '.createBrand', function (e) {
+        $(document).on('click', '.createPermission', function (e) {
             e.preventDefault();
-            $('#createBrandModalForm').on('submit', function (e) {
+            $('#createPermissionModalForm').on('submit', function (e) {
                 e.preventDefault();
                 var form = $(this);
                 var formData = new FormData(this);
@@ -305,7 +305,7 @@
                 form.find('.is-invalid').removeClass('is-invalid');
                 form.find('.invalid-feedback').text('');
                 $.ajax({
-                    url: "{{ route('brands.store', '')}}", // Adjust route as necessary
+                    url: "{{ route('permissions.store', '')}}", // Adjust route as necessary
                     type: 'POST',
                     data: formData,
                     processData: false, // Important for FormData
@@ -338,39 +338,41 @@
     </script>
     <script>
 
-        $(document).on('click', '.edit-brand', function (e) {
+        $(document).on('click', '.edit-permission', function (e) {
             // e.preventDefault();
 
 
             // return false;
-            var brandId = $(this).data('brandid');
-            // alertify.success('ho' + brandId);
+            var id = $(this).data('id');
+            // alertify.success('ho' + permissionId);
             // alertify.success(''+productDetailId+" "+productId);
-            var $form = $('#editBrandForm');
+            var $form = $('#editPermissionForm');
             // $form.reset();
             $form.find('.is-invalid').removeClass('is-invalid');
             $form.find('.invalid-feedback').text('');
-            $('#editBrandLabel').text('Edit Brand #' + brandId);
+            $('#editPermissionLabel').text('Edit Permission #' + id);
             ///wait for 5s to continue
             $form.find('[name]').hide();
             $form.find('[type="submit"]').addClass('disabled');
             $form.find('.placeholder').show();
             $.ajax({
-                url: "{{ route('brands.edit', '') }}/" + brandId,
+                url: "{{ route('permissions.edit', '') }}/" + id,
                 type: 'GET',
                 success: function (response) {
                     $form.find('[name]').show();
                     $form.find('[type="submit"]').removeClass('disabled');
                     $form.find('.placeholder').hide();
-                    var brand = response.brand;
-                    $('#edit_name').val(brand.name);
+                    var  permission = response.permission;
+                    $('#edit_name').val(permission.name);
+                    $('#edit_group').val(permission.group);
+                    $('#edit_description').val(permission.description);
                 },
                 error: function (xhr, status, error) {
                     console.error("Error fetching product detail data:", error);
                 }
             });
             // Handle form submission for editing product
-            $('#editBrandForm').on('submit', function (e) {
+            $('#editPermissionForm').on('submit', function (e) {
                 e.preventDefault();
                 // e.stopPropagation()
                 var form = $(this);
@@ -379,7 +381,7 @@
                 form.find('.is-invalid').removeClass('is-invalid');
                 form.find('.invalid-feedback').text('');
                 $.ajax({
-                    url: "{{ route('brands.update', '')}}/" + brandId, // Adjust route as necessary
+                    url: "{{ route('permissions.update', '')}}/" + id, // Adjust route as necessary
                     type: 'POST',
                     data: formData,
                     processData: false, // Important for FormData
@@ -411,6 +413,50 @@
         });
     </script>
 
+    <script>
+        function deletePermission(button, id) {
+            const url = $(button).data('url');
+
+            $.ajax({
+                url: url,
+                type: 'POST',
+                headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                success: function (response) {
+                    if (response.success) {
+                        alertify.success(response.message);
+                        $('#delRes_' + id).html(response.html);
+                    } else {
+                        alertify.error(response.message);
+                    }
+                },
+                error: function (xhr) {
+                    alertify.error('An error occurred while deleting the permission.');
+                }
+            });
+        }
+
+        function restorePermission(button, id) {
+            const url = $(button).data('url');
+
+            $.ajax({
+                url: url,
+                type: 'POST',
+                headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                success: function (response) {
+                    if (response.success) {
+                        alertify.success(response.message);
+                        $('#delRes_' + id).html(response.html);
+                    } else {
+                        alertify.error(response.message);
+                    }
+                },
+                error: function (xhr) {
+                    alertify.error('An error occurred while restoring the permission.');
+                }
+            });
+        }
+
+    </script>
 @endsection
 
 

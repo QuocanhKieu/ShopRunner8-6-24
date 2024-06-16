@@ -49,6 +49,10 @@
         .placeholder {
             min-height: 38px;
         }
+        .nav-item#coupon {
+            background-color: rgba(255, 255, 255, .1);
+            color: #fff;
+        }
     </style>
 @endsection
 @section('content')

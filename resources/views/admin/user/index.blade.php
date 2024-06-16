@@ -105,6 +105,10 @@
         /*.delete-order {*/
         /*    padding: 5px;*/
         /*}*/
+        .nav-item#user {
+            background-color: rgba(255, 255, 255, .1);
+            color: #fff;
+        }
     </style>
 @endsection
 @section('content')

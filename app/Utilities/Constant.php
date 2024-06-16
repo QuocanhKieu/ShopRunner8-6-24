@@ -157,4 +157,34 @@ class Constant
         self::ALLOWED => '#00ad00',
         self::REFUSED => '#dc3545',
     ];
+    //////PERMISSIONS GROUPS
+    const ADMIN = 0;
+    const AUTHENTICATE = 1;
+    const BRAND = 2;
+    const CATEGORY = 3;
+    const CONTROLLER = 4;
+    const COUPON = 5;
+    const LANGUAGE = 6;
+    const ORDER = 7;
+    const PERMISSION = 8;
+    const PRODUCT_COMMENT = 9;
+    const PRODUCT = 10;
+    const REVIEW = 11;
+    const USER = 12;
+
+    public static $PERMISSION_CONTROLLERS = [
+        self::ADMIN => 'AdminController',
+        self::AUTHENTICATE => 'AuthenticateController',
+        self::BRAND => 'BrandController',
+        self::CATEGORY => 'CategoryController',
+        self::CONTROLLER => 'Controller',
+        self::COUPON => 'CouponController',
+        self::LANGUAGE => 'LanguageController',
+        self::ORDER => 'OrderController',
+        self::PERMISSION => 'PermissionController',
+        self::PRODUCT_COMMENT => 'ProductCommentController',
+        self::PRODUCT => 'ProductController',
+        self::REVIEW => 'ReviewController',
+        self::USER => 'UserController',
+    ];
 }

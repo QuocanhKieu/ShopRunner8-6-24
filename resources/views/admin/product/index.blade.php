@@ -49,6 +49,10 @@
             height: auto !important;
             font-size: 1.175rem !important;
         }
+        .nav-item#product {
+            background-color: rgba(255, 255, 255, .1);
+            color: #fff;
+        }
     </style>
 @endsection
 @section('content')

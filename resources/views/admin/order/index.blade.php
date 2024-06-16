@@ -116,6 +116,10 @@
         /*.delete-order {*/
         /*    padding: 5px;*/
         /*}*/
+        .nav-item#order {
+            background-color: rgba(255, 255, 255, .1);
+            color: #fff;
+        }
     </style>
 @endsection
 @section('content')
@@ -249,7 +253,7 @@
                                         //                                        $deliveryFee = $order->delivery_fee ?? 0;
                                                                                 $paymentType = $order->payment_type;
                                                                                 $phone = $order->phone;
-                                                                                $totalAmount = $orderDetail->total;
+                                                                                $totalAmount = $orderDetail->total??0;
                                         //                                        $pendingPayment = $order->pending_payment ?? 0;
                                         //                                        $paymentStatus = $order->payment_status ?? '';
                                                                                 $orderStatus = $order->status ?? '';
@@ -260,13 +264,13 @@
                                         <td style="width:auto;">
                                             <span style="position: relative">
                                             {{ $orderId }}
-                                                @if(trim($order->note??''))
-                                                    <a class="orderNoteDisplay" id="orderNoteDisplay{{$order->id}}"
-                                                       title="Customer Note"
-                                                       href="javascript:void(0)"
-                                                       onclick="displayOrderNote(this, {{$order->id}})"><i
-                                                            class="fas fa-comment-alt"></i></a>
-                                                @endif
+{{--                                                @if(trim($order->note??''))--}}
+{{--                                                    <a class="orderNoteDisplay" id="orderNoteDisplay{{$order->id}}"--}}
+{{--                                                       title="Customer Note"--}}
+{{--                                                       href="javascript:void(0)"--}}
+{{--                                                       onclick="displayOrderNote(this, {{$order->id}})"><i--}}
+{{--                                                            class="fas fa-comment-alt"></i></a>--}}
+{{--                                                @endif--}}
                                             </span>
                                         </td>
                                         <td>
