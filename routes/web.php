@@ -8,9 +8,11 @@ use App\Http\Controllers\CouponController;
 use App\Http\Controllers\Front\AccountController;
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProductCommentController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use \App\Http\Controllers\Front\ShopController;
@@ -93,8 +95,17 @@ Route::prefix('account')->group(function (){
 Route::middleware(['auth', 'level'])->prefix('admin')->group(function () {
     Route::get('', [AdminController::class, 'index'])
         ->name('admin');
-    Route::get('search', [AdminController::class, 'search'])
-        ->name('admin.search');
+    Route::get('/getOrdersForChart', [AdminController::class, 'getOrdersForChart'])
+        ->name('getOrdersForChart');
+    Route::get('/getTodayOrderStatusData', [AdminController::class, 'getTodayOrderStatusData'])
+        ->name('getTodayOrderStatusData');
+    Route::get('/getLatestOrders', [AdminController::class, 'getLatestOrders'])
+        ->name('getLatestOrders');
+    Route::get('/getBestSellingProducts', [AdminController::class, 'getBestSellingProducts'])
+        ->name('getBestSellingProducts');
+
+
+
     Route::prefix('categories')->group(function () {
         Route::get('/search', [CategoryController::class, 'search'])
             ->name('categories.search');
@@ -250,7 +261,7 @@ Route::middleware(['auth', 'level'])->prefix('admin')->group(function () {
         Route::get('/', [CouponController::class, 'index'])
             ->name('coupons');
     });
-
+////phân quyền authorization
     Route::prefix('users')->group(function () {
         Route::post('/restore/{id}', [UserController::class, 'restore'])
             ->name('users.restore');
@@ -265,5 +276,35 @@ Route::middleware(['auth', 'level'])->prefix('admin')->group(function () {
 
         Route::get('/', [UserController::class, 'index'])
             ->name('users');
+    });
+
+    Route::prefix('permissions')->group(function () {
+        Route::post('/restore/{id}', [PermissionController::class, 'restore'])
+            ->name('permissions.restore');
+        Route::post('/delete/{id}', [PermissionController::class, 'delete'])
+            ->name('permissions.delete');
+        Route::post('/update/{permission}', [PermissionController::class, 'update'])
+            ->name('permissions.update');
+        Route::get('/edit/{permission}', [PermissionController::class, 'edit'])
+            ->name('permissions.edit');
+        Route::post('/store', [PermissionController::class, 'store'])
+            ->name('permissions.store');
+        Route::get('/', [PermissionController::class, 'index'])
+            ->name('permissions');
+    });
+
+    Route::prefix('roles')->group(function () {
+        Route::post('/restore/{id}', [RoleController::class, 'restore'])
+            ->name('roles.restore');
+        Route::post('/delete/{id}', [RoleController::class, 'delete'])
+            ->name('roles.delete');
+        Route::post('/update/{role}', [RoleController::class, 'update'])
+            ->name('roles.update');
+        Route::get('/edit/{role}', [RoleController::class, 'edit'])
+            ->name('roles.edit');
+        Route::post('/store', [RoleController::class, 'store'])
+            ->name('roles.store');
+        Route::get('/', [RoleController::class, 'index'])
+            ->name('roles');
     });
 });

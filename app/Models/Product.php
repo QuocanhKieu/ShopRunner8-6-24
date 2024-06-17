@@ -31,6 +31,11 @@ class Product extends Model
     {
         return $this->hasMany(ProductDetail::class);
     }
+    public function getTotalSoldQuantityAttribute()
+    {
+        // Calculate total sold quantity using relationship
+        return $this->details()->sum('qty');
+    }
     public function productComments()
     {
         return $this->hasMany(ProductComment::class,'product_id','id');

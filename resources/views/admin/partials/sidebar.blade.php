@@ -3,7 +3,7 @@
     <a href="{{asset('admins/index3.html')}}" class="brand-link">
         <img src="{{asset('admins/img/AdminLTELogo.png')}}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
              style="opacity: .8">
-        <span class="brand-text font-weight-light">AdminLTE 3</span>
+        <span class="brand-text font-weight-light">ShopRunner</span>
     </a>
 
     <!-- Sidebar -->
@@ -49,7 +49,7 @@
 {{--                        </li>--}}
 {{--                    </ul>--}}
 {{--                </li>--}}
-                <li class="nav-item">
+                <li class="nav-item" id="category">
                     <a href="{{route('categories')}}" class="nav-link">
                         <i class="fas fa-th-list"></i>
                         <p style="    white-space: nowrap;">
@@ -57,7 +57,7 @@
                         </p>
                     </a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item" id="brand">
                     <a href="{{route('brands')}}" class="nav-link">
                         <i class="fas fa-flag"></i>
                         <p style="    white-space: nowrap;">
@@ -65,51 +65,59 @@
                         </p>
                     </a>
                 </li>
-{{--                <li class="nav-item">--}}
-{{--                    <a href="{{route('menus')}}" class="nav-link">--}}
-{{--                        <i class="nav-icon fas fa-th"></i>--}}
-{{--                        <p>--}}
-{{--                             Menus--}}
-{{--                        </p>--}}
-{{--                    </a>--}}
-{{--                </li>--}}
-                <li class="nav-item">
+                <li class="nav-item" id="product">
                     <a href="{{route('products')}}" class="nav-link">
                         <i class="fas fa-warehouse"></i>
                         <p style="    white-space: nowrap;">
-                             Sản Phẩm
+                             Products
                         </p>
                     </a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item" id="order">
                     <a href="{{route('orders')}}" class="nav-link">
                         <i class="fas fa-cart-plus"></i>
                         <p style="    white-space: nowrap;">
-                             Đơn Hàng
+                             Orders
                         </p>
                     </a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item" id="productComment">
                     <a href="{{route('productComments')}}" class="nav-link">
                         <i class="fas fa-star-half-alt"></i>
                         <p style="    white-space: nowrap;">
-                             Đánh Giá
+                             Reviews
                         </p>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a href="{{route('users')}}" class="nav-link">
-                        <i class="fas fa-users"></i>
-                        <p style="    white-space: nowrap;">
-                             Người Dùng
-                        </p>
-                    </a>
-                </li>
-                <li class="nav-item">
+                <li class="nav-item" id="coupon">
                     <a href="{{route('coupons')}}" class="nav-link">
                         <i class="fas fa-receipt"></i>
                         <p style="    white-space: nowrap;">
-                            Mã Giảm Giá
+                            Vouchers
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item" id="user">
+                    <a href="{{route('users')}}" class="nav-link">
+                        <i class="fas fa-users"></i>
+                        <p style="    white-space: nowrap;">
+                            Users
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item" id="role">
+                    <a href="{{route('users')}}" class="nav-link">
+                        <i class="fas fa-users"></i>
+                        <p style="    white-space: nowrap;">
+                            Roles
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item" id="permission">
+                    <a href="{{route('permissions')}}" class="nav-link">
+                        <i class="fas fa-users"></i>
+                        <p style="    white-space: nowrap;">
+                            Permissions
                         </p>
                     </a>
                 </li>
