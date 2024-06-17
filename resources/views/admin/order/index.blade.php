@@ -197,17 +197,17 @@
                                         $columns = [
                                          'id' => ['name' => 'ID', 'sortable' => true],
                                          'user_id' => ['name' => 'UserID', 'sortable' => true],
-                                         'first_name' => ['name' => 'Họ và tên', 'sortable' => true],
-                                         'phone' => ['name' => 'Số điện thoại', 'sortable' => true],
+                                         'first_name' => ['name' => 'Name', 'sortable' => true],
+                                         'phone' => ['name' => 'Phone', 'sortable' => true],
 //                                         'sub_total_amount' => ['name' => 'Tiền Hàng', 'sortable' => false],
 //                                         'total_discount' => ['name' => 'Giảm giá', 'sortable' => false],
 //                                         'delivery_fee' => ['name' => 'Phí Ship', 'sortable' => false],
-                                         'total_amount' => ['name' => 'Tổng chi phí', 'sortable' => false],
-                                         'payment_type' => ['name' => 'Phương thức thanh toán', 'sortable' => true],
+                                         'total_amount' => ['name' => 'Final Total', 'sortable' => false],
+                                         'payment_type' => ['name' => 'Payment Type', 'sortable' => true],
 //                                         'pending_payment' => ['name' => 'Cần thanh toán', 'sortable' => true],
                                          'payment_status' => ['name' => 'Paid', 'sortable' => true],
-                                         'status' => ['name' => 'Trạng thái đơn hàng', 'sortable' => true],
-                                         'created_at' => ['name' => 'Ngày tạo', 'sortable' => true],
+                                         'status' => ['name' => 'Status', 'sortable' => true],
+                                         'created_at' => ['name' => 'Created', 'sortable' => true],
                                      ];
                                     @endphp
 
