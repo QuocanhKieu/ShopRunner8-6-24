@@ -45,6 +45,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
         /*    width: 100vw ; !* This will make the table width equal to the maximum screen width *!*/
         /*    overflow-x: auto; !* This will show a horizontal scrollbar when the table width exceeds the screen width *!*/
         /*}*/
+        th, td {
+            text-align: center !important;
+        }
     </style>
     @yield('this-css')
 </head>

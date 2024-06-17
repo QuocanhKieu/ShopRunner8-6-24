@@ -44,7 +44,7 @@
     .inner {
 
     }
-    #orders-container td.phone,  th{
+            #orders-container td.phone,  th{
         width: 10px !important;
         /*vertical-align: middle;*/
     }
@@ -249,7 +249,7 @@
                             <!-- /.card-header -->
                             <div class="card-body">
                                 <div class="container">
-                                    <div  class="mt-1">
+                                    <div  class="mt-1" style="overflow-x: scroll">
 
                                         <table class="table">
                                             <thead>
@@ -466,7 +466,7 @@
                                 </h3>
 
                                 <div class="card-tools">
-                                    <a href="{{route('orders')}}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                                    <a href="{{route('products')}}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
 
                                     {{--                                    <button type="button" class="btn bg-info btn-sm" data-card-widget="remove">--}}
 {{--                                        <i class="fas fa-times"></i>--}}

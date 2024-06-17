@@ -111,6 +111,7 @@
             padding: 2px;
             white-space: nowrap;
             border-radius: 3px;
+            text-align: center;
         }
 
         /*.delete-order {*/
@@ -326,16 +327,17 @@
                                         </td>
                                         <td>{{ $createdAt }}</td>
                                         <td>
-                                            <div class="dropdown" style=" margin-bottom: 5px; margin-right: 5px">
-                                                <button class="btn btn-secondary dropdown-toggle" type="button"
-                                                        id="dropdownMenuButton" data-toggle="dropdown"
-                                                        aria-haspopup="true" aria-expanded="false">
-                                                    Actions
-                                                </button>
-                                                <div class="dropdown-menu dropdown-menu-right"
-                                                     aria-labelledby="dropdownMenuButton"
-                                                     id="actionOptions_{{$order->id}}">
-                                                    <a class="dropdown-item"
+{{--                                            <div class="dropdown" style=" margin-bottom: 5px; margin-right: 5px">--}}
+{{--                                                <button class="btn btn-secondary dropdown-toggle" type="button"--}}
+{{--                                                        id="dropdownMenuButton" data-toggle="dropdown"--}}
+{{--                                                        aria-haspopup="true" aria-expanded="false">--}}
+{{--                                                    Actions--}}
+{{--                                                </button>--}}
+{{--                                                <div class="dropdown-menu dropdown-menu-right"--}}
+{{--                                                     aria-labelledby="dropdownMenuButton"--}}
+{{--                                                     id="actionOptions_{{$order->id}}">--}}
+                                                    <a
+{{--                                                        class="dropdown-item"--}}
                                                        href="{{route('orders.orderDetails',['order'=> $order->id])}}"><i
                                                             class="fas fa-eye"></i> Order Details</a>
                                                     {{--                                                    @if($orderStatus === 'Đã xác nhận' || $orderStatus === 'Chờ xác nhận')--}}
@@ -348,8 +350,8 @@
                                                     {{--                                                    <a class="dropdown-item" href="{{route('orders.editOrderInfo',['orderId'=> $order->id])}}"><i class="fas fa-edit"></i>Edit OrderInfo</a>--}}
                                                     {{--                                                    @endif--}}
                                                     <!-- Add more actions as needed... -->
-                                                </div>
-                                            </div>
+{{--                                                </div>--}}
+{{--                                            </div>--}}
 {{--                                            @if($order->deleted_at)--}}
 {{--                                                <button type="button" class="btn btn-success"--}}
 {{--                                                        onclick="restoreOrder(this, {{ $order->id}})" title="Restore"--}}
