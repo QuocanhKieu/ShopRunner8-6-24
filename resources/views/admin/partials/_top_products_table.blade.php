@@ -5,7 +5,7 @@
 
     @endphp
     <div class="d-flex " style="font-size: 1.1em">
-        <img src="{{asset("front/img/product/$thumbImgPath")}}" style="max-width:75px">
+        <img src="{{asset("front/img/product/$thumbImgPath")}}" style="max-width:75px; object-fit: cover">
 
         <div class="pl-3">
             <p class="text-primary ">Sold: {{$t_product->total_quantity_sold}}</p>
