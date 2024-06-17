@@ -1,5 +1,5 @@
+@php use App\Utilities\Constant as Constant @endphp
 @extends('admin.layouts.admin')
-
 @section('title')
 <title>Dashboard</title>
 @endsection
@@ -43,6 +43,10 @@
     }
     .inner {
 
+    }
+    #orders-container td.phone,  th{
+        width: 10px !important;
+        /*vertical-align: middle;*/
     }
 </style>
 @endsection
@@ -191,7 +195,7 @@
                 <!-- Main row -->
                 <div class="row">
                     <!-- Left col -->
-                    <section class="col-lg-7 connectedSortable">
+                    <section class="col-lg-8 connectedSortable">
                         <!-- Custom tabs (Charts with tabs)-->
                         <div class="card">
                             <div class="card-header">
@@ -224,13 +228,16 @@
                         <!-- DIRECT CHAT -->
                         <div class="card direct-chat direct-chat-primary">
                             <div class="card-header">
-                                <h3 class="card-title">New Orders List</h3>
+
+                                <h3 class="card-title"><i class="fas fa-cart-plus"></i> Newest Orders List</h3>
 
                                 <div class="card-tools">
                                     {{--                                    <span title="3 New Messages" class="badge badge-primary">3</span>--}}
-                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                                        <i class="fas fa-minus"></i>
-                                    </button>
+                                    <a href="{{route('orders')}}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+
+{{--                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">--}}
+{{--                                        <i class="fas fa-minus"></i>--}}
+{{--                                    </button>--}}
                                     {{--                                    <button type="button" class="btn btn-tool" title="Contacts" data-widget="chat-pane-toggle">--}}
                                     {{--                                        <i class="fas fa-comments"></i>--}}
                                     {{--                                    </button>--}}
@@ -241,37 +248,168 @@
                             </div>
                             <!-- /.card-header -->
                             <div class="card-body">
-                                <!-- Conversations are loaded here -->
+                                <div class="container">
+                                    <div  class="mt-1">
+
+                                        <table class="table">
+                                            <thead>
+                                            <tr>
+                                                @php
+                                                    $columns = [
+                                                     'id' => ['name' => 'ID', 'sortable' => true],
+//                                                     'user_id' => ['name' => 'UserID', 'sortable' => true],
+                                                     'first_name' => ['name' => 'Name', 'sortable' => true],
+                                                     'phone' => ['name' => 'Phone', 'sortable' => true],
+            //                                         'sub_total_amount' => ['name' => 'Tiền Hàng', 'sortable' => false],
+            //                                         'total_discount' => ['name' => 'Giảm giá', 'sortable' => false],
+            //                                         'delivery_fee' => ['name' => 'Phí Ship', 'sortable' => false],
+                                                     'total_amount' => ['name' => 'Total', 'sortable' => false],
+//                                                     'payment_type' => ['name' => 'Phương thức thanh toán', 'sortable' => true],
+            //                                         'pending_payment' => ['name' => 'Cần thanh toán', 'sortable' => true],
+                                                     'payment_status' => ['name' => 'Paid', 'sortable' => true],
+                                                     'status' => ['name' => 'Status', 'sortable' => true],
+                                                     'created_at' => ['name' => 'Created', 'sortable' => true],
+                                                 ];
+                                                @endphp
+
+                                                @foreach($columns as $column => $details)
+                                                    <th>
+{{--                                                        @if($details['sortable'])--}}
+{{--                                                            <a href="javascript:void(0);">--}}
+{{--                                                                {{ $details['name'] }}--}}
+{{--                                                                @if($sortBy === $column)--}}
+{{--                                                                    <i class="fa fa-sort-{{ $sortDirection === 'asc' ? 'up' : 'down' }}"></i>--}}
+{{--                                                                @endif--}}
+{{--                                                            </a>--}}
+{{--                                                        @else--}}
+{{--                                                            {{ $details['name'] }}--}}
+{{--                                                        @endif--}}
+                                                            {{ $details['name'] }}
+                                                    </th>
+                                                @endforeach
+                                                <th>Action</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody id="orders-container" style="height: 591px; overflow-y: scroll">
+{{--                                            @foreach($orders as $order)--}}
+{{--                                                @php--}}
+{{--                                                    //                                    dd($order);--}}
+{{--                                                                                            $orderDetail = $order->orderDetails->first();--}}
+
+{{--                                                                                            $user = $order->user;--}}
+{{--                                                    //                                        $voucher = $order->voucher;--}}
+{{--                                                    //                                        $shippingInfo = $order->shippingInfo;--}}
+{{--                                                                                            $orderId = $order->id;--}}
+{{--                                                                                            $name = $order->first_name.' '.$order->last_name;--}}
+{{--                                                    //                                        $subTotal = $orderDetail->sub_total_amount;//tiền hàng--}}
+{{--                                                    //                                        $totalDiscount = $order->total_discount ?? 0;--}}
+{{--                                                    //                                        $deliveryFee = $order->delivery_fee ?? 0;--}}
+{{--                                                                                            $paymentType = $order->payment_type;--}}
+{{--                                                                                            $phone = $order->phone;--}}
+{{--                                                                                            $totalAmount = $orderDetail->total??0;--}}
+{{--                                                    //                                        $pendingPayment = $order->pending_payment ?? 0;--}}
+{{--                                                    //                                        $paymentStatus = $order->payment_status ?? '';--}}
+{{--                                                                                            $orderStatus = $order->status ?? '';--}}
+{{--                                                                                            $paymentStatus = $order->payment_status ?? '';--}}
+{{--                                                                                            $createdAt = $order->created_at->format('H:i d/m/Y');--}}
+{{--                                                @endphp--}}
+{{--                                                <tr>--}}
+{{--                                                    <td style="width:auto;">--}}
+{{--                                            <span style="position: relative">--}}
+{{--                                            {{ $orderId }}--}}
+{{--                                                --}}{{--                                                @if(trim($order->note??''))--}}
+{{--                                                --}}{{--                                                    <a class="orderNoteDisplay" id="orderNoteDisplay{{$order->id}}"--}}
+{{--                                                --}}{{--                                                       title="Customer Note"--}}
+{{--                                                --}}{{--                                                       href="javascript:void(0)"--}}
+{{--                                                --}}{{--                                                       onclick="displayOrderNote(this, {{$order->id}})"><i--}}
+{{--                                                --}}{{--                                                            class="fas fa-comment-alt"></i></a>--}}
+{{--                                                --}}{{--                                                @endif--}}
+{{--                                            </span>--}}
+{{--                                                    </td>--}}
+{{--                                                    <td>--}}
+{{--                                                        {{ $user->id }}--}}
+{{--                                                    </td>--}}
+{{--                                                    <td>{{$name}}</td>--}}
+{{--                                                    <td>{{$phone}}</td>--}}
+{{--                                                    <td style="width:10%;">--}}
+{{--                                                        $ {{$totalAmount}}--}}
+{{--                                                    </td>--}}
+{{--                                                    <td>{{$paymentType}}</td>--}}
+{{--                                                    <td>--}}
+{{--                                                        <div class="paymentSta"--}}
+{{--                                                             style="color:{{$paymentStatus == 1 ? '#373434;' : '#01a935' }}"--}}
+{{--                                                        >--}}
+{{--                                                            {{Constant::$PAYMENT_STATUS[$paymentStatus]}}--}}
+{{--                                                        </div>--}}
+
+{{--                                                    </td>--}}
+{{--                                                    <td>--}}
+{{--                                                        <div class="paymentSta"--}}
+{{--                                                             style="color:{{Constant::STATUSCOLORS[$orderStatus]}}; font-size: 1.1em"--}}
+{{--                                                        >--}}
+{{--                                                                {{Constant::$ORDER_STATUS[$orderStatus]}}--}}
+{{--                                                        </div>--}}
+{{--                                                    </td>--}}
+{{--                                                    <td>{{ $createdAt }}</td>--}}
+{{--                                                    <td>--}}
+{{--                                                        <div class="dropdown" style=" margin-bottom: 5px; margin-right: 5px">--}}
+{{--                                                            <button class="btn btn-secondary dropdown-toggle" type="button"--}}
+{{--                                                                    id="dropdownMenuButton" data-toggle="dropdown"--}}
+{{--                                                                    aria-haspopup="true" aria-expanded="false">--}}
+{{--                                                                Actions--}}
+{{--                                                            </button>--}}
+{{--                                                            <div class="dropdown-menu dropdown-menu-right"--}}
+{{--                                                                 aria-labelledby="dropdownMenuButton"--}}
+{{--                                                                 id="actionOptions_{{$order->id}}">--}}
+{{--                                                                <a class="dropdown-item"--}}
+{{--                                                                   href="{{route('orders.orderDetails',['order'=> $order->id])}}"><i--}}
+{{--                                                                        class="fas fa-eye"></i> Order Details</a>--}}
+
+{{--                                                            </div>--}}
+{{--                                                        </div>--}}
+{{--                                                    </td>--}}
+{{--                                                </tr>--}}
+{{--                                            @endforeach--}}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div id="pagination-container" class=" d-flex justify-content-center " >
+
+                                    </div>
+                                </div>
 
                             </div>
                             <!-- /.card-footer-->
                         </div>
-                        <div class="card direct-chat direct-chat-primary">
-                            <div class="card-header">
-                                <h3 class="card-title">Top selling Products by Month
+{{--                        <div class="card direct-chat direct-chat-primary">--}}
+{{--                            <div class="card-header">--}}
+{{--                                <h3 class="card-title">Top selling Products in 7 days--}}
 
-                                </h3>
+{{--                                </h3>--}}
 
-                                <div class="card-tools">
-                                    {{--                                    <span title="3 New Messages" class="badge badge-primary">3</span>--}}
-                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                                        <i class="fas fa-minus"></i>
-                                    </button>
-                                    {{--                                    <button type="button" class="btn btn-tool" title="Contacts" data-widget="chat-pane-toggle">--}}
-                                    {{--                                        <i class="fas fa-comments"></i>--}}
-                                    {{--                                    </button>--}}
+{{--                                <div class="card-tools">--}}
+{{--                                    <a href="{{route('products')}}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>--}}
+
+{{--                                    --}}{{--                                    <span title="3 New Messages" class="badge badge-primary">3</span>--}}
+{{--                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">--}}
+{{--                                        <i class="fas fa-minus"></i>--}}
+{{--                                    </button>--}}
+
+{{--                                    --}}{{--                                    <button type="button" class="btn btn-tool" title="Contacts" data-widget="chat-pane-toggle">--}}
+{{--                                    --}}{{--                                        <i class="fas fa-comments"></i>--}}
+{{--                                    --}}{{--                                    </button>--}}
 {{--                                    <button type="button" class="btn btn-tool" data-card-widget="remove">--}}
 {{--                                        <i class="fas fa-times"></i>--}}
 {{--                                    </button>--}}
-                                </div>
-                            </div>
-                            <!-- /.card-header -->
-                            <div class="card-body">
-                                <!-- Conversations are loaded here -->
+{{--                                </div>--}}
+{{--                            </div>--}}
+{{--                            <!-- /.card-header -->--}}
+{{--                            <div class="card-body">--}}
+{{--                                <!-- Conversations are loaded here -->--}}
 
-                            </div>
-                            <!-- /.card-footer-->
-                        </div>
+{{--                            </div>--}}
+{{--                            <!-- /.card-footer-->--}}
+{{--                        </div>--}}
                         <!--/.direct-chat -->
 
 
@@ -279,7 +417,7 @@
                     </section>
                     <!-- /.Left col -->
                     <!-- right col (We are only adding the ID to make the widgets sortable)-->
-                    <section class="col-lg-5 connectedSortable">
+                    <section class="col-lg-4 connectedSortable">
 
                         <!-- Map card -->
                         <div class="card ">
@@ -308,7 +446,7 @@
                             <div class="card-footer bg-transparent">
                                 <div class="row justify-content-center">
                                     <div class="row d-flex  mt-4">
-                                        <div id="chart-legend" class="col-md-12 text-center"></div>
+                                        <div id="chart-legend" class="col-md-12 text-center d-flex justify-content-around"></div>
                                     </div>
                                 </div>
 
@@ -319,50 +457,44 @@
                         <!-- /.card -->
 
                         <!-- solid sales graph -->
-                        <div class="card bg-gradient-info">
+                        <div class="card ">
                             <div class="card-header border-0">
                                 <h3 class="card-title">
-                                    <i class="fas fa-th mr-1"></i>
-                                    Sales Graph
+                                    <i class="fas fa-chart-bar"></i>
+
+                                    Top Selling Products
                                 </h3>
 
                                 <div class="card-tools">
-                                    <button type="button" class="btn bg-info btn-sm" data-card-widget="collapse">
-                                        <i class="fas fa-minus"></i>
-                                    </button>
-{{--                                    <button type="button" class="btn bg-info btn-sm" data-card-widget="remove">--}}
+                                    <a href="{{route('orders')}}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+
+                                    {{--                                    <button type="button" class="btn bg-info btn-sm" data-card-widget="remove">--}}
 {{--                                        <i class="fas fa-times"></i>--}}
 {{--                                    </button>--}}
                                 </div>
                             </div>
-                            <div class="card-body">
-                                <canvas class="chart" id="line-chart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                            <div class="card-body pt-1" id="t_products-container" style="height:570px; overflow-y: scroll">
+{{--                                @foreach($t_products as $t_product)--}}
+{{--                                    @php--}}
+{{--                                        $product = \App\Models\Product::find($t_product->product_id);--}}
+{{--                                        $thumbImgPath = $product->productImages()->first()->path??'';--}}
+
+{{--                                    @endphp--}}
+{{--                                    <div class="d-flex " style="font-size: 1.1em">--}}
+{{--                                        <img src="{{asset("front/img/product/$thumbImgPath")}}" style="max-width:75px">--}}
+
+{{--                                        <div class="pl-3">--}}
+{{--                                            <p class="text-primary ">Sold: {{$t_product->total_quantity_sold}}</p>--}}
+{{--                                            <p class="text-secondary">{{$product->name}}</p>--}}
+{{--                                        </div>--}}
+{{--                                    </div>--}}
+{{--                                    <hr class="mt-1">--}}
+{{--                                @endforeach--}}
+
                             </div>
                             <!-- /.card-body -->
-                            <div class="card-footer bg-transparent">
-                                <div class="row">
-                                    <div class="col-4 text-center">
-                                        <input type="text" class="knob" data-readonly="true" value="20" data-width="60" data-height="60"
-                                               data-fgColor="#39CCCC">
-
-                                        <div class="text-white">Mail-Orders</div>
-                                    </div>
-                                    <!-- ./col -->
-                                    <div class="col-4 text-center">
-                                        <input type="text" class="knob" data-readonly="true" value="50" data-width="60" data-height="60"
-                                               data-fgColor="#39CCCC">
-
-                                        <div class="text-white">Online</div>
-                                    </div>
-                                    <!-- ./col -->
-                                    <div class="col-4 text-center">
-                                        <input type="text" class="knob" data-readonly="true" value="30" data-width="60" data-height="60"
-                                               data-fgColor="#39CCCC">
-
-                                        <div class="text-white">In-Store</div>
-                                    </div>
-                                    <!-- ./col -->
-                                </div>
+                            <div class="card-footer bg-transparent pb-0 d-flex justify-content-center" id="t_product_pagination-container">
+{{--                                --}}
                                 <!-- /.row -->
                             </div>
                             <!-- /.card-footer -->
@@ -370,43 +502,43 @@
                         <!-- /.card -->
 
                         <!-- Calendar -->
-                        <div class="card bg-gradient-success">
-                            <div class="card-header border-0">
+{{--                        <div class="card bg-gradient-success">--}}
+{{--                            <div class="card-header border-0">--}}
 
-                                <h3 class="card-title">
-                                    <i class="far fa-calendar-alt"></i>
-                                    Calendar
-                                </h3>
-                                <!-- tools card -->
-                                <div class="card-tools">
-                                    <!-- button with a dropdown -->
-                                    <div class="btn-group">
-                                        <button type="button" class="btn btn-success btn-sm dropdown-toggle" data-toggle="dropdown" data-offset="-52">
-                                            <i class="fas fa-bars"></i>
-                                        </button>
-                                        <div class="dropdown-menu" role="menu">
-                                            <a href="#" class="dropdown-item">Add new event</a>
-                                            <a href="#" class="dropdown-item">Clear events</a>
-                                            <div class="dropdown-divider"></div>
-                                            <a href="#" class="dropdown-item">View calendar</a>
-                                        </div>
-                                    </div>
-                                    <button type="button" class="btn btn-success btn-sm" data-card-widget="collapse">
-                                        <i class="fas fa-minus"></i>
-                                    </button>
+{{--                                <h3 class="card-title">--}}
+{{--                                    <i class="far fa-calendar-alt"></i>--}}
+{{--                                    Calendar--}}
+{{--                                </h3>--}}
+{{--                                <!-- tools card -->--}}
+{{--                                <div class="card-tools">--}}
+{{--                                    <!-- button with a dropdown -->--}}
+{{--                                    <div class="btn-group">--}}
+{{--                                        <button type="button" class="btn btn-success btn-sm dropdown-toggle" data-toggle="dropdown" data-offset="-52">--}}
+{{--                                            <i class="fas fa-bars"></i>--}}
+{{--                                        </button>--}}
+{{--                                        <div class="dropdown-menu" role="menu">--}}
+{{--                                            <a href="#" class="dropdown-item">Add new event</a>--}}
+{{--                                            <a href="#" class="dropdown-item">Clear events</a>--}}
+{{--                                            <div class="dropdown-divider"></div>--}}
+{{--                                            <a href="#" class="dropdown-item">View calendar</a>--}}
+{{--                                        </div>--}}
+{{--                                    </div>--}}
+{{--                                    <button type="button" class="btn btn-success btn-sm" data-card-widget="collapse">--}}
+{{--                                        <i class="fas fa-minus"></i>--}}
+{{--                                    </button>--}}
 {{--                                    <button type="button" class="btn btn-success btn-sm" data-card-widget="remove">--}}
 {{--                                        <i class="fas fa-times"></i>--}}
 {{--                                    </button>--}}
-                                </div>
-                                <!-- /. tools -->
-                            </div>
-                            <!-- /.card-header -->
-                            <div class="card-body pt-0">
-                                <!--The calendar -->
-                                <div id="calendar" style="width: 100%"></div>
-                            </div>
-                            <!-- /.card-body -->
-                        </div>
+{{--                                </div>--}}
+{{--                                <!-- /. tools -->--}}
+{{--                            </div>--}}
+{{--                            <!-- /.card-header -->--}}
+{{--                            <div class="card-body pt-0">--}}
+{{--                                <!--The calendar -->--}}
+{{--                                <div id="calendar" style="width: 100%"></div>--}}
+{{--                            </div>--}}
+{{--                            <!-- /.card-body -->--}}
+{{--                        </div>--}}
                         <!-- /.card -->
                     </section>
                     <!-- right col -->
@@ -467,70 +599,6 @@
     <script src="{{asset('admins/DashboardAdminLte/dashboard.js')}}"></script>
 
 
-{{--    <script>--}}
-{{--        $(document).ready(function() {--}}
-{{--            var salesChartCanvas = document.getElementById('revenue-chart-canvas').getContext('2d')--}}
-{{--            // $('#revenue-chart').get(0).getContext('2d');--}}
-
-{{--            var salesChartData = {--}}
-{{--                labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],--}}
-{{--                datasets: [--}}
-{{--                    {--}}
-{{--                        label: 'Digital Goods',--}}
-{{--                        backgroundColor: 'rgba(60,141,188,0.9)',--}}
-{{--                        borderColor: 'rgba(60,141,188,0.8)',--}}
-{{--                        pointRadius: false,--}}
-{{--                        pointColor: '#3b8bba',--}}
-{{--                        pointStrokeColor: 'rgba(60,141,188,1)',--}}
-{{--                        pointHighlightFill: '#fff',--}}
-{{--                        pointHighlightStroke: 'rgba(60,141,188,1)',--}}
-{{--                        data: [28, 48, 40, 19, 86, 27, 90]--}}
-{{--                    },--}}
-{{--                    // {--}}
-{{--                    //     label: 'Electronics',--}}
-{{--                    //     backgroundColor: 'rgba(210, 214, 222, 1)',--}}
-{{--                    //     borderColor: 'rgba(210, 214, 222, 1)',--}}
-{{--                    //     pointRadius: false,--}}
-{{--                    //     pointColor: 'rgba(210, 214, 222, 1)',--}}
-{{--                    //     pointStrokeColor: '#c1c7d1',--}}
-{{--                    //     pointHighlightFill: '#fff',--}}
-{{--                    //     pointHighlightStroke: 'rgba(220,220,220,1)',--}}
-{{--                    //     data: [65, 59, 80, 81, 56, 55, 40]--}}
-{{--                    // }--}}
-{{--                ]--}}
-{{--            }--}}
-
-{{--            var salesChartOptions = {--}}
-{{--                maintainAspectRatio: false,--}}
-{{--                responsive: true,--}}
-{{--                legend: {--}}
-{{--                    display: false--}}
-{{--                },--}}
-{{--                scales: {--}}
-{{--                    xAxes: [{--}}
-{{--                        gridLines: {--}}
-{{--                            display: false--}}
-{{--                        }--}}
-{{--                    }],--}}
-{{--                    yAxes: [{--}}
-{{--                        gridLines: {--}}
-{{--                            display: false--}}
-{{--                        }--}}
-{{--                    }]--}}
-{{--                }--}}
-{{--            }--}}
-
-{{--            // This will get the first returned node in the jQuery collection.--}}
-{{--            // eslint-disable-next-line no-unused-vars--}}
-{{--            var salesChart = new Chart(salesChartCanvas, { // lgtm[js/unused-local-variable]--}}
-{{--                type: 'line',--}}
-{{--                data: salesChartData,--}}
-{{--                options: salesChartOptions--}}
-{{--            })--}}
-{{--        });--}}
-{{--    </script>--}}
-
-
     <script>
         $(document).ready(function() {
             // AJAX request to fetch data for the chart
@@ -589,37 +657,6 @@
     </script>
 
     <script>
-        // Donut Chart
-        // var pieChartCanvas = $('#sales-chart-canvas').get(0).getContext('2d')
-        // var pieData = {
-        //     labels: [
-        //         'Instore Sales',
-        //         'Download Sales',
-        //         'Mail-Order Sales'
-        //     ],
-        //     datasets: [
-        //         {
-        //             data: [30, 12, 20],
-        //             backgroundColor: ['#f56954', '#00a65a', '#f39c12']
-        //         }
-        //     ]
-        // }
-        // var pieOptions = {
-        //     legend: {
-        //         display: false
-        //     },
-        //     maintainAspectRatio: false,
-        //     responsive: true
-        // }
-        // // Create pie or douhnut chart
-        // // You can switch between pie and douhnut using the method below.
-        // // eslint-disable-next-line no-unused-vars
-        // var pieChart = new Chart(pieChartCanvas, { // lgtm[js/unused-local-variable]
-        //     type: 'doughnut',
-        //     data: pieData,
-        //     options: pieOptions
-        // })
-
 
         $(document).ready(function() {
             // AJAX request to fetch data for the chart
@@ -664,8 +701,8 @@
                     legendContainer.empty(); // Clear existing content
                     $.each(labels, function(index, label) {
                         const backgroundColor = backgroundColors[index];
-                        const legendItem = `<span class="mr-3">
-                              <span class="legend-box" style="background-color:${backgroundColor}; display:inline-block; width:12px; height:12px;"></span>${label}
+                        const legendItem = `<span class="ml-2" >
+                              <span  class="legend-box" style="background-color:${backgroundColor}; display:inline-block; width:12px; height:12px;"></span>${label}
                             </span>`;
                         legendContainer.append(legendItem);
                     });
@@ -678,6 +715,66 @@
 
 
     </script>
+    <script>
+        function fetchOrders(pageUrl = '/admin/getLatestOrders?page=1') {
+            $.ajax({
+                url: pageUrl,
+                type: 'GET',
+                dataType: 'json',
+                success: function(response) {
+                    $('#orders-container').html(response.orders_table_html);
+                    $('#pagination-container').html(response.pagination_buttons);
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error fetching orders:', error);
+                }
+            });
+        }
+
+        $(document).ready(function() {
+            fetchOrders(); // Fetch the first page on page load
+            $('#pagination-container').on('click', '.btn', function() {
+                // Event handler function
+                var $this = $(this);
+                var url = $this.data('url')
+                // alertify.success(url+'');
+                fetchOrders(url);
+            });
+        });
+
+    </script>
+
+    <script>
+        function fetchProducts(pageUrl = '/admin/getBestSellingProducts?page=1') {
+            $.ajax({
+                url: pageUrl,
+                type: 'GET',
+                dataType: 'json',
+                success: function(response) {
+                    // console.log(response.products_table_html);
+                    // return false;
+                    $('#t_products-container').html(response.products_table_html);
+                    $('#t_product_pagination-container').html(response.pagination_buttons);
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error fetching orders:', error);
+                }
+            });
+        }
+
+        $(document).ready(function() {
+            fetchProducts(); // Fetch the first page on page load
+            $('#t_product_pagination-container').on('click', '.btn', function() {
+                // Event handler function
+                var $this = $(this);
+                var url = $this.data('url')
+                // alertify.success(url+'');
+                fetchProducts(url);
+            });
+        });
+
+    </script>
+
 @endsection
 
 

@@ -99,6 +99,10 @@ Route::middleware(['auth', 'level'])->prefix('admin')->group(function () {
         ->name('getOrdersForChart');
     Route::get('/getTodayOrderStatusData', [AdminController::class, 'getTodayOrderStatusData'])
         ->name('getTodayOrderStatusData');
+    Route::get('/getLatestOrders', [AdminController::class, 'getLatestOrders'])
+        ->name('getLatestOrders');
+    Route::get('/getBestSellingProducts', [AdminController::class, 'getBestSellingProducts'])
+        ->name('getBestSellingProducts');
 
 
 

@@ -39,8 +39,8 @@ class Constant
     const PAYMENT_STATUS_PAID = 2;
 
     public static $PAYMENT_STATUS = [
-        self::PAYMENT_STATUS_UNPAID => 'Chưa thanh toán',
-        self::PAYMENT_STATUS_PAID => 'Đã thanh toán',
+        self::PAYMENT_STATUS_UNPAID => 'UnPaid',
+        self::PAYMENT_STATUS_PAID => 'Paid',
     ];
 
     //user

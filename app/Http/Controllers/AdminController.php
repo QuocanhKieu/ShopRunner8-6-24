@@ -8,7 +8,10 @@ use App\Models\ProductComment;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\View;
 
 class AdminController extends Controller
 {
@@ -32,9 +35,16 @@ class AdminController extends Controller
         $revenueWeek = $this->calculateRevenue($startOfWeek, $endOfWeek);
         $revenueMonth = $this->calculateRevenue($startOfMonth, $endOfMonth);
         $revenueYear = $this->calculateRevenue($startOfYear, $endOfYear);
-        $top10Products = $this->getTop10ProductsByQuantitySold();
-        $top5Products = $this->getTop5ProductsSoldThisWeek();
-        $latestOrders = Order::with('orderDetails') // Assuming you have an 'order_details' relationship in your Order model
+        $topProducts = $this->getTopProductsByQuantitySold();
+//        dd($topProducts);
+//        $top5Products = $this->getTop5ProductsSoldThisWeek();
+//        $latestOrders = Order::with('orderDetails') // Assuming you have an 'order_details' relationship in your Order model
+//        ->orderByDesc('created_at')
+//            ->limit(3)
+//            ->get();
+
+        $latestOrders = Order::with('orderDetails') // Assuming you have an 'orderDetails' relationship in your Order model
+        ->where('status', '<', 3) // Add the condition to filter orders with status smaller than 4
         ->orderByDesc('created_at')
             ->limit(3)
             ->get();
@@ -48,7 +58,10 @@ class AdminController extends Controller
             'revenueMonth',
             'revenueWeek',
             'revenueDay',
-        ));
+        ),[
+            'orders' => $latestOrders,
+            't_products' => $topProducts
+        ]);
     }
 
 
@@ -146,7 +159,7 @@ class AdminController extends Controller
         // Prepare data for the chart
         $labels = [];
         $data = [];
-        $backgroundColors = ['#f56954', '#00a65a', '#f39c12', '#3c8dbc', '#d2d6de'];
+        $backgroundColors = ['#000', '#007bff', '#28a745', '#fd7e14', '#dc3545'];
 
         // Populate labels and data arrays
         foreach ($ORDER_STATUS as $status => $label) {
@@ -160,31 +173,120 @@ class AdminController extends Controller
             'backgroundColors' => $backgroundColors
         ]);
     }
-    public function getTop10ProductsByQuantitySold()
+    public function getTopProductsByQuantitySold()
     {
         $topProducts = DB::table('product_details')
             ->select('product_id', DB::raw('SUM(qty) as total_quantity_sold'))
             ->groupBy('product_id')
             ->orderByDesc('total_quantity_sold')
-            ->limit(10)
+            ->limit(20)
             ->get();
 
-        return $topProducts;
+        // Convert to collection
+        return $topProductsCollection = collect($topProducts);
     }
-    public function getTop5ProductsSoldThisWeek()
-    {
-        // Get the start and end date of the current week
-        $startOfWeek = Carbon::now()->startOfWeek();  // Monday of the current week
-        $endOfWeek = Carbon::now()->endOfWeek();      // Sunday of the current week
+//    public function getTop5ProductsSoldThisWeek()
+//    {
+//        // Get the start and end date of the current week
+//        $startOfWeek = Carbon::now()->startOfWeek();  // Monday of the current week
+//        $endOfWeek = Carbon::now()->endOfWeek();      // Sunday of the current week
+//
+//        $topProducts = DB::table('product_details')
+//            ->select('product_id', DB::raw('SUM(qty) as total_quantity_sold'))
+//            ->whereBetween('created_at', [$startOfWeek, $endOfWeek])
+//            ->groupBy('product_id')
+//            ->orderByDesc('total_quantity_sold')
+//            ->limit(5)
+//            ->get();
+//
+//        return $topProducts;
+//    }
 
+//    reference
+
+
+    public function getLatestOrders(Request $request)
+    {
+        $perPage = 7; // Number of orders per page
+        $page = $request->query('page', 1); // Default to page 1 if not provided
+        $totalLimit = 15; // Limit total number of orders
+
+        // Fetch the 15 newest orders with status < 3, ordered by created_at descending
+        // Fetch the 15 newest orders with status < 3, ordered by created_at descending
+        $latestOrders = Order::where('status', '<', 3)
+            ->orderByDesc('created_at')
+            ->take($totalLimit) // Limit to 15 orders
+            ->get();
+
+        // Manually create a paginator for the fetched orders
+        $orders = new LengthAwarePaginator(
+            $latestOrders->slice(($page - 1) * $perPage, $perPage),
+            $latestOrders->count(),
+            $perPage,
+            $page,
+            ['path' => url()->current()]
+        );
+
+        // Render the Blade partial with the orders data
+//        dd($orders);
+
+        $ordersTableHtml = View::make('admin.partials._newest_orders_table', ['orders' => $orders])->render();
+        // Render pagination buttons using Blade components
+        $paginationButtons = View::make('components.pagination-buttons', [
+            'pagination' => $orders
+        ])->render();
+//        dd($paginationButtons);
+
+        return response()->json([
+            'orders_table_html' => $ordersTableHtml,
+            'pagination_buttons' => $paginationButtons
+        ]);
+    }
+    public function getBestSellingProducts(Request $request)
+    {
+        $perPage = 5; // Number of items per page
+        $page = $request->query('page', 1); // Current page number
+        $totalLimit = 20; // Total number of items to fetch
+
+        // Fetch top products by quantity sold
         $topProducts = DB::table('product_details')
             ->select('product_id', DB::raw('SUM(qty) as total_quantity_sold'))
-            ->whereBetween('created_at', [$startOfWeek, $endOfWeek])
             ->groupBy('product_id')
             ->orderByDesc('total_quantity_sold')
-            ->limit(5)
+            ->limit($totalLimit)
             ->get();
 
-        return $topProducts;
+        // Convert to collection
+        $topProductsCollection = collect($topProducts);
+
+        // Get current page items
+        $currentPageItems = $topProductsCollection->slice(($page - 1) * $perPage, $perPage)->values();
+
+        // Create LengthAwarePaginator instance
+        $paginatedTopProducts = new LengthAwarePaginator(
+            $currentPageItems,
+            $topProductsCollection->count(),
+            $perPage,
+            $page,
+            ['path' => $request->url(), 'query' => $request->query()]
+        );
+
+
+        // Render the Blade partial with the orders data
+//        dd($orders);
+
+        $productsTableHtml = View::make('admin.partials._top_products_table', ['t_products' => $paginatedTopProducts])->render();
+//        dd($productsTableHtml);
+        // Render pagination buttons using Blade components
+        $paginationButtons = View::make('components.pagination-buttons', [
+            'pagination' => $paginatedTopProducts
+        ])->render();
+//        dd($paginationButtons);
+
+        return response()->json([
+            'products_table_html' => $productsTableHtml,
+            'pagination_buttons' => $paginationButtons
+        ]);
     }
+
 }
